@@ -1,24 +1,14 @@
 Source: libnet
-Section: devel
-Priority: optional
-Maintainer: Sean E. Perry <shaleh@debian.org>
-Standards-Version: 3.0.0
+Maintainer: Michael Alan Dorman <mdorman@debian.org>
+Standards-Version: 0.1
 
-Package: libnet0-dev
+Package: libnet
 Architecture: any
-Depends: libc6-dev, libpcap-dev
-Build-Depends: libpcap-dev
-Provides: libnet-dev
-Conflicts: libnet-dev
-Description: Routines for the construction and handling of network packets.
- libnet provides a portable framework for low-level network packet writing and
- handling. 
- .
- Libnet features portable packet creation interfaces at the IP layer and link
- layer, as well as a host of supplementary functionality.  Still in it's
- infancy however, the library is evolving quite a bit. Additional functionality
- and stability are added with each release. 
- .
- Using libnet, quick and simple packet assembly applications can be whipped up
- with little effort. With a bit more time, more complex programs can be written
- (Traceroute and ping were easily rewritten using libnet and libpcap).
+Depends: perl (>=5.003), io
+Description: Implementation of Internet protocols for Perl
+ libnet contains Perl implementations of the following protocols:
+ Net::FTP (RFC959), Net::SMTP (RFC821), Net::Telnet (RFC854),
+ Net::Time (RFC867 & RFC868), Net::NNTP (RFC977), Net::POP3 (RFC1939),
+ Net::SNPP (RFC1861)
+ It also contains various utility functions for implementing new
+ protocols.

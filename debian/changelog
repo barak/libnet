@@ -1,16 +1,17 @@
-libnet (1.0-1) unstable; urgency=low
+libnet (1.01-2) unstable; urgency=low
 
-  * New upstream release
-  * changes to meet current policy
+  * Corrected maintainer address
+  * Added dependency on io.
 
- -- Sean E. Perry <shaleh@debian.org>  Thu, 11 Nov 1999 23:54:10 -0800
+ -- Michael Alan Dorman <mdorman@debian.org>  Fri, 25 Oct 1996 11:30:16 -0400
 
-libnet (0.99g-1) unstable; urgency=low
+libnet (1.01-1) unstable; urgency=low
 
-  * Initial Release.
+  * Initial packaging.
 
- -- Sean E. Perry <shaleh@debian.org>  Mon, 13 Sep 1999 18:16:40 -0700
+ -- Michael Alan Dorman <mdorman@calder.med.miami.edu>  Fri, 13 Sep 1996 10:26:20 -0400
 
 Local variables:
 mode: debian-changelog
+user-mail-address: "mdorman@debian.org"
 End:
