@@ -4,7 +4,7 @@ Standards-Version: 0.1
 
 Package: libnet
 Architecture: any
-Depends: perl (>=5.003), io
+Depends: perl (>=5.003.07)
 Description: Implementation of Internet protocols for Perl
  libnet contains Perl implementations of the following protocols:
  Net::FTP (RFC959), Net::SMTP (RFC821), Net::Telnet (RFC854),

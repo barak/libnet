@@ -1,3 +1,10 @@
+libnet (1.01-3) unstable; urgency=low
+
+  * Removed dependency on IO
+  * Changed perl dependency to be >=5.003.07
+
+ -- Michael Alan Dorman <mdorman@debian.org>  Sat, 23 Nov 1996 11:39:10 -0500
+
 libnet (1.01-2) unstable; urgency=low
 
   * Corrected maintainer address
