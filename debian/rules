@@ -1,58 +1,88 @@
 #!/usr/bin/make -f
 
-package=libnet
+# Uncomment this to turn on verbose mode. 
+#export DH_VERBOSE=1
 
-tmpdir = $(shell pwd)/debian/tmp
-instdirs = $(tmpdir) \
-	$(tmpdir)/DEBIAN \
-	$(tmpdir)/usr/doc/libnet \
-	$(tmpdir)/usr/lib/perl5/Net \
-	$(tmpdir)/usr/man/man3
+# This has to be exported to make some magic below work.
+# (what magic?  -- cph)
+# (if you do not export it, nobody will see it.  -- cavok)
+export DH_OPTIONS
 
-build:
-	$(checkdir)
-	perl Makefile.PL INSTALLDIRS=perl
+# removed the autotools stuff, currently the update of autotool stuff
+# is done by cvs-debuild when i make the final build of the package.
+# i'd like to keep them out of here and from cvs.
+
+DESTDIR := $(shell pwd)/debian/tmp
+
+PREFIX = /usr
+INFODIR = $(PREFIX)/share/info
+MANDIR = $(PREFIX)/share/man
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
+    CONFIGURE_ARGS += --build $(DEB_HOST_GNU_TYPE)
+else
+    CONFIGURE_ARGS += --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
+endif
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+    CFLAGS := -O0
+else
+    CFLAGS := -O2
+endif
+CFLAGS += -g
+
+configure: configure-stamp
+configure-stamp:
+	CFLAGS="$(CFLAGS)" ./configure $(CONFIGURE_ARGS) \
+	    --prefix=$(PREFIX) --mandir=$(MANDIR) --infodir=$(INFODIR)
+	touch configure-stamp
+
+build: configure-stamp build-stamp
+build-stamp: configure-stamp
+	dh_testdir
 	$(MAKE)
-	touch build
+	touch build-stamp
 
 clean:
-	$(checkdir)
-	-rm -f build
-	-$(MAKE) -i distclean
-	-rm -rf *~ debian/tmp debian/*~ debian/files*
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+	-$(MAKE) distclean
+	dh_clean config.log
 
-binary-indep:	checkroot build $(instdirs)
-	$(checkdir)
-	dpkg-gencontrol >$(tmpdir)/DEBIAN/control
-	$(MAKE) PREFIX=$(tmpdir)/usr pure_install
-	cp debian/copyright $(tmpdir)/usr/doc/$(package)/copyright
-	chown -R root.root $(tmpdir)
-	chmod -R g-ws $(tmpdir)
-	dpkg --build $(tmpdir) ..
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	$(MAKE) $(MAKE_FLAGS) DESTDIR=$(DESTDIR) install
+	dh_movefiles
 
-binary-arch:  checkroot build
-	$(checkdir)
+# Build architecture-independent files here.
+binary-indep: build install
 
-define checkdir
-	test -f debian/rules
-endef
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs
+	dh_installexamples -plibnet1-dev sample/*.c sample/*.h
+	dh_installman
+	dh_installchangelogs doc/CHANGELOG
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs -V "libnet1 (>= 1.1.2-1)"
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
 
-# Below here is fairly generic really
-
-binary:		binary-indep binary-arch
-
-source diff:
-	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
-
-checkroot:
-	$(checkdir)
-	test root = "`whoami`"
-
-.PHONY: binary source diff clean checkroot
-
-zapdirs:
-	-rm -rf $(tmpdir)
-
-$(instdirs): zapdirs
-	install -d -m 755 $@
-	chmod g-s $@
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install
