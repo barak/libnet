@@ -1,0 +1,11 @@
+#! /bin/sh
+# postrm script for libnet
+#
+
+set -e
+
+## will be a shared lib soon
+#ldconfig
+
+#DEBHELPER#
+

@@ -1,0 +1,24 @@
+Source: libnet
+Section: devel
+Priority: optional
+Maintainer: Sean E. Perry <shaleh@debian.org>
+Standards-Version: 3.0.0
+
+Package: libnet0-dev
+Architecture: any
+Depends: libc6-dev, libpcap-dev
+Build-Depends: libpcap-dev
+Provides: libnet-dev
+Conflicts: libnet-dev
+Description: Routines for the construction and handling of network packets.
+ libnet provides a portable framework for low-level network packet writing and
+ handling. 
+ .
+ Libnet features portable packet creation interfaces at the IP layer and link
+ layer, as well as a host of supplementary functionality.  Still in it's
+ infancy however, the library is evolving quite a bit. Additional functionality
+ and stability are added with each release. 
+ .
+ Using libnet, quick and simple packet assembly applications can be whipped up
+ with little effort. With a bit more time, more complex programs can be written
+ (Traceroute and ping were easily rewritten using libnet and libpcap).

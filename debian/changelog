@@ -1,0 +1,16 @@
+libnet (1.0-1) unstable; urgency=low
+
+  * New upstream release
+  * changes to meet current policy
+
+ -- Sean E. Perry <shaleh@debian.org>  Thu, 11 Nov 1999 23:54:10 -0800
+
+libnet (0.99g-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Sean E. Perry <shaleh@debian.org>  Mon, 13 Sep 1999 18:16:40 -0700
+
+Local variables:
+mode: debian-changelog
+End:

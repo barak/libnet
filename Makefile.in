@@ -16,7 +16,7 @@ srcdir      =   @srcdir@
 BIN_PREFIX  =   @bindir@/
 INC_PREFIX  =   @includedir@/
 LIB_PREFIX  =   @libdir@/
-MAN_PREFIX  =   @MAN_PREFIX@
+MAN_PREFIX  =   @mandir@
 
 LIBNET      =   libnet
 LIBPWRITE   =   libpwrite
