@@ -12,7 +12,9 @@ export DH_OPTIONS
 # is done by cvs-debuild when i make the final build of the package.
 # i'd like to keep them out of here and from cvs.
 
-DESTDIR := $(shell pwd)/debian/tmp
+include /usr/share/quilt/quilt.make
+
+DESTDIR := $(CURDIR)/debian/tmp
 
 PREFIX = /usr
 INFODIR = $(PREFIX)/share/info
@@ -34,26 +36,41 @@ ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 else
     CFLAGS := -O2
 endif
-CFLAGS += -g
+CFLAGS += -g -Wall
+
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+	NUMJOBS := -j$(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+	MAKEFLAGS += $(NUMJOBS)
+endif
 
 configure: configure-stamp
-configure-stamp:
-	CFLAGS="$(CFLAGS)" ./configure $(CONFIGURE_ARGS) \
-	    --prefix=$(PREFIX) --mandir=$(MANDIR) --infodir=$(INFODIR)
-	touch configure-stamp
+configure-stamp: $(QUILT_STAMPFN)
+	libtoolize
+	aclocal
+	autoconf
+	automake --add-missing --copy
 
-build: configure-stamp build-stamp
+	./configure $(CONFIGURE_ARGS) \
+	    --prefix=$(PREFIX) --mandir=$(MANDIR) --infodir=$(INFODIR) \
+	    LDFLAGS="-Wl,-z,defs,--as-needed" CFLAGS="$(CFLAGS)"
+	touch $@
+
+build: build-stamp
 build-stamp: configure-stamp
 	dh_testdir
 	$(MAKE)
-	touch build-stamp
+	touch $@
 
-clean:
+clean: unpatch
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
-	-$(MAKE) distclean
-	dh_clean config.log
+	
+	[ ! -f Makefile ] || $(MAKE) distclean
+	
+	find $(CURDIR) -name "Makefile.in" -exec rm -rf {} \;
+	rm -rf $(CURDIR)/configure
+	
+	dh_clean build-stamp configure-stamp config.sub config.guess ltmain.sh
 
 install: build
 	dh_testdir
@@ -61,23 +78,20 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	$(MAKE) $(MAKE_FLAGS) DESTDIR=$(DESTDIR) install
-	dh_movefiles
+	dh_install --sourcedir=$(DESTDIR) --list-missing
 
-# Build architecture-independent files here.
 binary-indep: build install
-
-# Build architecture-dependent files here.
 binary-arch: build install
 	dh_testdir
 	dh_testroot
 	dh_installdocs
-	dh_installexamples -plibnet1-dev sample/*.c sample/*.h
+	dh_installexamples
 	dh_installman
 	dh_installchangelogs doc/CHANGELOG
-	dh_strip
+	dh_strip --dbg-package=libnet1-dbg
 	dh_compress
+	dh_makeshlibs -V "libnet1 (>= 1.1.2)"
 	dh_fixperms
-	dh_makeshlibs -V "libnet1 (>= 1.1.2-1)"
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
@@ -85,4 +99,4 @@ binary-arch: build install
 	dh_builddeb
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
+.PHONY: build clean binary-indep binary-arch binary install configure
