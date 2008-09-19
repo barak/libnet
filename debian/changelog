@@ -1,3 +1,11 @@
+libnet (1.1.2.1-4) unstable; urgency=low
+
+  * debian/patches:
+    - series: disable 05-fix_libnet_pblock_coalesce_buffer_overrun.patch
+      (Closes: #499239) -- looking for a new way to fix #418975
+
+ -- David Paleino <d.paleino@gmail.com>  Fri, 19 Sep 2008 08:11:53 +0200
+
 libnet (1.1.2.1-3) unstable; urgency=low
 
   * Package adopted (Closes: #483710)
