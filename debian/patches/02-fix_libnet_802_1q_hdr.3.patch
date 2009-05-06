@@ -1,3 +1,4 @@
+Fix missing description
 --- libnet.orig/doc/man/man3/libnet_802_1q_hdr.3
 +++ libnet/doc/man/man3/libnet_802_1q_hdr.3
 @@ -2,7 +2,7 @@

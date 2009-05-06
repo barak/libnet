@@ -1,3 +1,4 @@
+Fix lintian warning
 --- libnet.orig/doc/man/man3/libnet-functions.h.3
 +++ libnet/doc/man/man3/libnet-functions.h.3
 @@ -485,7 +485,7 @@

@@ -1,3 +1,4 @@
+Fix build on Hurd kernels
 --- libnet-1.1.2.1.orig/include/libnet.h.in
 +++ libnet-1.1.2.1/include/libnet.h.in
 @@ -90,7 +90,7 @@

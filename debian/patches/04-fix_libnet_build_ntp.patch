@@ -1,3 +1,4 @@
+Correctly initialize fields
 --- libnet.orig/src/libnet_build_ntp.c
 +++ libnet/src/libnet_build_ntp.c
 @@ -85,8 +85,8 @@

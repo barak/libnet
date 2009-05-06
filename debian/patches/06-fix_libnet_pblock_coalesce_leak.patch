@@ -1,3 +1,4 @@
+Fix libnet_pblock_coalesce memory leak
 --- libnet.orig/src/libnet_pblock.c
 +++ libnet/src/libnet_pblock.c
 @@ -339,7 +339,7 @@

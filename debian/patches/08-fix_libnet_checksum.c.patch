@@ -1,3 +1,4 @@
+Fix libnet checksum
 --- libnet-1.1.2.1.orig/src/libnet_checksum.c
 +++ libnet-1.1.2.1/src/libnet_checksum.c
 @@ -42,8 +42,10 @@
