@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet-structures.h,v 1.18 2004/03/16 18:40:58 mike Exp $
+ *  $Id: libnet-structures.h,v 1.19 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet-structures.h - Network routine library structures header file
  *
@@ -79,8 +79,19 @@ struct libnet_protocol_block
     u_int8_t *buf;                      /* protocol buffer */
     u_int32_t b_len;                    /* length of buf */
     u_int16_t h_len;                    /* header length (for checksumming) */
-    u_int32_t ip_offset;                /* offset to IP header for csums */
-    u_int32_t copied;                   /* bytes copied */
+       /* Unused for IPV4_H block types.
+        * For protocols that sit on top of IP, it should be the the amount of
+        * buf that is the header, and will be included in the checksum.
+        */
+    u_int32_t ip_offset;                /* offset from end of pkt to beginning of IP header for csums */
+       /* Unused for IPV4_H block types.
+        * For protocols that sit on top of IP (UDP, ICMP, ...), they often
+        * include some information from the IP header (in the form of a "pseudo
+        * header") in their own checksum calculation. To build that
+        * pseudo-header, thet need to find the real header.
+        */
+    u_int32_t copied;                   /* bytes copied - the amount of data copied into buf */
+       /* Used and updated by libnet_pblock_append(). */
     u_int8_t type;                      /* type of pblock */
 /* this needs to be updated every time a new packet builder is added */
 #define LIBNET_PBLOCK_ARP_H             0x01    /* ARP header */
@@ -146,6 +157,7 @@ struct libnet_protocol_block
 #define LIBNET_PBLOCK_IPV6_DESTOPTS_H   0x3d    /* IPv6 dest opts header */
 #define LIBNET_PBLOCK_IPV6_HBHOPTS_H    0x3e    /* IPv6 hop/hop opts header */
 #define LIBNET_PBLOCK_SEBEK_H           0x3f    /* Sebek header */
+#define LIBNET_PBLOCK_HSRP_H            0x40    /* HSRP header */
     u_int8_t flags;                             /* control flags */
 #define LIBNET_PBLOCK_DO_CHECKSUM       0x01    /* needs a checksum */
     libnet_ptag_t ptag;                 /* protocol block tag */

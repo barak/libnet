@@ -192,7 +192,7 @@ libnet_getfd(libnet_t *l)
     return (l->fd);
 }
 
-int8_t *
+const char *
 libnet_getdevice(libnet_t *l)
 {
     if (l == NULL)
@@ -250,6 +250,7 @@ libnet_getpbuf_size(libnet_t *l, libnet_ptag_t ptag)
 u_int32_t
 libnet_getpacket_size(libnet_t *l)
 {
+    // Why doesn't this return l->total_size?
     libnet_pblock_t *p;
     u_int32_t n;
 

@@ -8,6 +8,7 @@ libnet.so.1 libnet1 #MINVER#
  libnet_adv_cull_header@Base 1.1.2.1
  libnet_adv_cull_packet@Base 1.1.2.1
  libnet_adv_free_packet@Base 1.1.2.1
+ libnet_adv_write_raw_ipv4@Base 1.1.3
  libnet_adv_write_link@Base 1.1.2.1
  libnet_autobuild_arp@Base 1.1.2.1
  libnet_autobuild_ethernet@Base 1.1.2.1
@@ -45,6 +46,7 @@ libnet.so.1 libnet1 #MINVER#
  libnet_build_fddi@Base 1.1.2.1
  libnet_build_gre@Base 1.1.2.1
  libnet_build_gre_last_sre@Base 1.1.2.1
+ libnet_build_hsrp@Base 1.1.3
  libnet_build_gre_sre@Base 1.1.2.1
  libnet_build_icmpv4_echo@Base 1.1.2.1
  libnet_build_icmpv4_mask@Base 1.1.2.1
@@ -152,6 +154,7 @@ libnet.so.1 libnet1 #MINVER#
  libnet_select_device@Base 1.1.2.1
  libnet_stats@Base 1.1.2.1
  libnet_toggle_checksum@Base 1.1.2.1
+ libnet_version@Base 1.1.3
  libnet_write@Base 1.1.2.1
  libnet_write_link@Base 1.1.2.1
  libnet_write_raw_ipv4@Base 1.1.2.1

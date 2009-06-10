@@ -1,3 +1,26 @@
+libnet (1.1.4-1) unstable; urgency=low
+
+  * New upstream release.
+  * Removed quilt depedencies (no more debian patches).
+  * Install upstream CHANGELOG in docs.
+
+ -- Stefanos Harhalakis <v13@v13.gr>  Wed, 10 Jun 2009 17:18:17 +0300
+
+libnet (1.1.3-2) unstable; urgency=low
+
+  * debian/copyright fixes.
+  * Fixed upstream author.
+
+ -- Stefanos Harhalakis <v13@v13.gr>  Wed, 13 May 2009 23:28:01 +0300
+
+libnet (1.1.3-1) unstable; urgency=low
+
+  * New upstream release / upstream takeover (Closes: #418975)
+  * New maintainer (Closes: #516222)  
+  * debian/rules changed to CDBS
+
+ -- Stefanos Harhalakis <v13@v13.gr>  Wed, 13 May 2009 21:43:35 +0300
+
 libnet (1.1.2.1-5) unstable; urgency=low
 
   * Orphaning package

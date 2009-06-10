@@ -1,6 +1,6 @@
 Document: libnet1-doc
 Title: Libnet Packet Assembly Library
-Author: Mike D. Schiffman
+Author: Mike D. Schiffman, Sam Roberts <vieuxtech@gmail.com>
 Abstract: This manual describes to developers
  how to use the LibNet library
 Section: Programming

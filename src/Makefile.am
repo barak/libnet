@@ -1,4 +1,4 @@
-# $Id: Makefile.am,v 1.5 2004/03/11 18:50:20 mike Exp $
+# $Id: Makefile.am,v 1.6 2004/11/09 07:05:07 mike Exp $
 #
 # Libnet automake information file
 # Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
@@ -8,9 +8,9 @@
 
 include $(top_srcdir)/Makefile.am.common
 
-lib_LIBRARIES = libnet.a
+lib_LTLIBRARIES = libnet.la
 
-libnet_a_SOURCES = libnet_asn1.c \
+libnet_la_SOURCES = libnet_asn1.c \
 			libnet_build_802.1q.c \
 			libnet_build_802.1x.c \
 			libnet_build_802.2.c \
@@ -24,6 +24,7 @@ libnet_a_SOURCES = libnet_asn1.c \
 			libnet_build_ethernet.c \
 			libnet_build_fddi.c \
 			libnet_build_gre.c \
+			libnet_build_hsrp.c \
 			libnet_build_icmp.c \
 			libnet_build_igmp.c \
 			libnet_build_ip.c \
@@ -57,15 +58,15 @@ libnet_a_SOURCES = libnet_asn1.c \
 			libnet_version.c \
 			libnet_write.c
 
-EXTRA_libnet_a_SOURCES = libnet_link_bpf.c \
-			libnet_link_dlpi.c \
-			libnet_link_linux.c \
-			libnet_link_nit.c \
- 			libnet_link_none.c \
-			libnet_link_pf.c \
-			libnet_link_snit.c \
-			libnet_link_snoop.c \
-			libnet_link_win32.c
+libnet_la_LIBADD = @LTLIBOBJS@
+libnet_la_LDFLAGS = -version-info 6:0:5 -Wl
 
-libnet_a_LIBADD = @LIBOBJS@
+# Note: this version-info should NOT simply be the version of the libnet
+# package. See:
+#   http://www.sourceware.org/autobook/autobook/autobook_91.html
+# for the rules.
+#
+# Note:
+# 1.1.2.1-fork is 5:0:4
+# 1.1.3 will be 6:0:5  -> new interfaces, backwards compatible
 

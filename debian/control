@@ -1,18 +1,15 @@
 Source: libnet
 Section: net
 Priority: optional
-Maintainer: Debian QA Group <packages@qa.debian.org>
-Build-Depends: debhelper (>= 6), sharutils, libpcap-dev, quilt,
- autotools-dev, automake, autoconf, libtool
+Maintainer: Stefanos Harhalakis <v13@v13.gr>
+Build-Depends: debhelper (>= 7), sharutils, libpcap-dev, cdbs, autotools-dev
 Standards-Version: 3.8.1
-Homepage: http://www.packetfactory.net/libnet
-Vcs-Git: git://git.debian.org/git/collab-maint/libnet.git
-Vcs-Browser: http://git.debian.org/?p=collab-maint/libnet.git
+Homepage: http://libnet-dev.sourceforge.net/
 
 Package: libnet1
 Architecture: any
 Section: libs
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: library for the construction and handling of network packets
  libnet provides a portable framework for low-level network packet
  writing and handling.
@@ -31,7 +28,7 @@ Package: libnet1-dbg
 Architecture: any
 Priority: extra
 Section: debug
-Depends: ${shlibs:Depends}, libnet1 (= ${binary:Version})
+Depends: ${shlibs:Depends}, libnet1 (= ${binary:Version}), ${misc:Depends}
 Description: debugging symbols for libnet
  libnet provides a portable framework for low-level network packet
  writing and handling.
@@ -51,7 +48,7 @@ Architecture: any
 Section: libdevel
 Provides: libnet-dev
 Conflicts: libnet-dev
-Depends: libc6-dev, libnet1 (= ${binary:Version})
+Depends: libc6-dev, libnet1 (= ${binary:Version}), ${misc:Depends}
 Description: development files for libnet
  libnet provides a portable framework for low-level network packet
  writing and handling.
@@ -71,6 +68,7 @@ Package: libnet1-doc
 Architecture: all
 Section: doc
 Suggests: libnet1-dev
+Depends: ${misc:Depends}
 Description: developers documentation files for libnet
  libnet provides a portable framework for low-level network packet
  writing and handling.

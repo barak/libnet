@@ -1,40 +1,19 @@
 /* include/config.h.in.  Generated from configure.in by autoheader.  */
-/*
-dnl $Id: config.h.in,v 1.11 2004/01/16 10:13:40 mike Exp $
-dnl
-dnl Libnet autoconfiguration acconfig.h file
-dnl Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
-dnl All rights reserved.
-dnl
-dnl Process this file with autoheader to produce a config.h file.
-dnl
-*/
 
-#undef LIBNET_BSDISH_OS
-#undef LIBNET_BSD_BYTE_SWAP
+/* Define if /dev/dlpi is a directory. */
 #undef DLPI_DEV_PREFIX
+
+/* Define if /dev/dlpi is available. */
 #undef HAVE_DEV_DLPI
-#undef HAVE_SOLARIS
-#undef HAVE_SOLARIS_IPV6
-#undef HAVE_HPUX11
-#undef HAVE_SOCKADDR_SA_LEN
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define if the <sys/dlpi.h> header exists. */
 #undef HAVE_DLPI
-#undef HAVE_PACKET_SOCKET
-#undef HAVE_STRUCT_IP_CSUM
-#undef HAVE_LIB_PCAP
-#undef LBL_ALIGN
-#undef STUPID_SOLARIS_CHECKSUM_BUG
-#undef _BSD_SOURCE
-#undef __BSD_SOURCE
-#undef __FAVOR_BSD
-#undef LIBNET_BIG_ENDIAN
-#undef LIBNET_LIL_ENDIAN
-#undef NO_SNPRINTF
 
-
-/*
-dnl EOF
-*/
+/* Define if we're building on HP/UX. */
+#undef HAVE_HPUX11
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
@@ -44,6 +23,9 @@ dnl EOF
 
 /* Define to 1 if you have the `packet' library (-lpacket). */
 #undef HAVE_LIBPACKET
+
+/* Define to 1 if you have the `resolv' library (-lresolv). */
+#undef HAVE_LIBRESOLV
 
 /* Define to 1 if you have the `socket' library (-lsocket). */
 #undef HAVE_LIBSOCKET
@@ -60,14 +42,23 @@ dnl EOF
 /* Define to 1 if you have the <net/ethernet.h> header file. */
 #undef HAVE_NET_ETHERNET_H
 
+/* Define if we're running on a Linux system with PF_PACKET sockets. */
+#undef HAVE_PACKET_SOCKET
+
+/* Define if the sockaddr structure includes a sa_len member. */
+#undef HAVE_SOCKADDR_SA_LEN
+
+/* Define if we are running on Solaris. */
+#undef HAVE_SOLARIS
+
+/* Define if our version of Solaris supports IPv6. */
+#undef HAVE_SOLARIS_IPV6
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
-
-/* Define to 1 if you have the `strerror' function. */
-#undef HAVE_STRERROR
 
 /* Define to 1 if you have the <strings.h> header file. */
 #undef HAVE_STRINGS_H
@@ -93,6 +84,24 @@ dnl EOF
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Define if unaligned memory accesses fail. */
+#undef LBL_ALIGN
+
+/* We are running on a big-endian machine. */
+#undef LIBNET_BIG_ENDIAN
+
+/* Define if our build OS supports the BSD APIs */
+#undef LIBNET_BSDISH_OS
+
+/* Define if libnet should byteswap data. */
+#undef LIBNET_BSD_BYTE_SWAP
+
+/* We are running on a little-endian machine. */
+#undef LIBNET_LIL_ENDIAN
+
+/* Define if snprintf() is unavailable on our system. */
+#undef NO_SNPRINTF
+
 /* Name of package */
 #undef PACKAGE
 
@@ -114,5 +123,17 @@ dnl EOF
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
+/* Define if our version of Solaris has broken checksums. */
+#undef STUPID_SOLARIS_CHECKSUM_BUG
+
 /* Version number of package */
 #undef VERSION
+
+/* Define as necessary to "unhide" header symbols. */
+#undef _BSD_SOURCE
+
+/* Define as necessary to "unhide" header symbols. */
+#undef __BSD_SOURCE
+
+/* Define if we should favor the BSD APIs when possible in Linux. */
+#undef __FAVOR_BSD
