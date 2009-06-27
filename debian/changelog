@@ -1,3 +1,10 @@
+libnet (1.1.4-2) unstable; urgency=low
+
+  * Fix double free()s (Closes: #534437)
+  * Standards version 3.8.2
+
+ -- Stefanos Harhalakis <v13@v13.gr>  Sat, 27 Jun 2009 14:50:35 +0300
+
 libnet (1.1.4-1) unstable; urgency=low
 
   * New upstream release.
