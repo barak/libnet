@@ -1,3 +1,13 @@
+libnet (1.1.4-2.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix "FTBFS: libnet_init.c:88:17: error: format not a string literal
+    and no format arguments [-Werror=format-security]": add patch from Bart
+    Martens as Werror_format-security.patch.
+    Closes: #643431
+
+ -- gregor herrmann <gregoa@debian.org>  Sat, 15 Oct 2011 16:30:40 +0200
+
 libnet (1.1.4-2) unstable; urgency=low
 
   * Fix double free()s (Closes: #534437)
