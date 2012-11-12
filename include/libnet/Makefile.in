@@ -188,6 +188,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign no-dependencies
 DISTCLEANFILES = *~
+ACLOCAL_AMFLAGS = -I m4
+INCLUDES = -I$(top_srcdir)/include
 libnetincludedir = $(includedir)/libnet
 libnetinclude_HEADERS = libnet-asn1.h \
 			libnet-functions.h \

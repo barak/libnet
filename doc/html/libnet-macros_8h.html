@@ -81,13 +81,13 @@
 #define&nbsp;</td><td class="memItemRight" valign="bottom"><b>LIBNET_CKSUM_CARRY</b>(x)&nbsp;&nbsp;&nbsp;(x = (x &gt;&gt; 16) + (x &amp; 0xffff), (~(x + (x &gt;&gt; 16)) &amp; 0xffff))</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="78c38337cc7b1e9ab572ed97d3aaa702"></a><!-- doxytag: member="libnet-macros.h::LIBNET_OSPF_AUTHCPY" ref="78c38337cc7b1e9ab572ed97d3aaa702" args="(x, y)" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>LIBNET_OSPF_AUTHCPY</b>(x, y)&nbsp;&nbsp;&nbsp;memcpy((u_int8_t *)x, (u_int8_t *)y, sizeof(y))</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>LIBNET_OSPF_AUTHCPY</b>(x, y)&nbsp;&nbsp;&nbsp;memcpy((uint8_t *)x, (uint8_t *)y, sizeof(y))</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="bba894cfc9afa729b9fae7a7daef128b"></a><!-- doxytag: member="libnet-macros.h::LIBNET_OSPF_CKSUMBUF" ref="bba894cfc9afa729b9fae7a7daef128b" args="(x, y)" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>LIBNET_OSPF_CKSUMBUF</b>(x, y)&nbsp;&nbsp;&nbsp;memcpy((u_int8_t *)x, (u_int8_t *)y, sizeof(y))</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>LIBNET_OSPF_CKSUMBUF</b>(x, y)&nbsp;&nbsp;&nbsp;memcpy((uint8_t *)x, (uint8_t *)y, sizeof(y))</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="9a522b76610c4ceadb57b6b839f2fdbf"></a><!-- doxytag: member="libnet-macros.h::LIBNET_NTP_DO_LI_VN_MODE" ref="9a522b76610c4ceadb57b6b839f2fdbf" args="(li, vn, md)" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>LIBNET_NTP_DO_LI_VN_MODE</b>(li, vn, md)&nbsp;&nbsp;&nbsp;((u_int8_t)((((li) &lt;&lt; 6) &amp; 0xc0) | (((vn) &lt;&lt; 3) &amp; 0x38) | ((md) &amp; 0x7)))</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>LIBNET_NTP_DO_LI_VN_MODE</b>(li, vn, md)&nbsp;&nbsp;&nbsp;((uint8_t)((((li) &lt;&lt; 6) &amp; 0xc0) | (((vn) &lt;&lt; 3) &amp; 0x38) | ((md) &amp; 0x7)))</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="2b3fe6da087ee254d764d9d3aad20116"></a><!-- doxytag: member="libnet-macros.h::LIBNET_ISLOOPBACK" ref="2b3fe6da087ee254d764d9d3aad20116" args="(p)" -->
 #define&nbsp;</td><td class="memItemRight" valign="bottom"><b>LIBNET_ISLOOPBACK</b>(p)&nbsp;&nbsp;&nbsp;(strcmp((p)-&gt;ifr_name, &quot;lo0&quot;) == 0)</td></tr>
@@ -187,16 +187,16 @@ Provides an interface to iterate through the context queue of libnet contexts. B
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">if</span> ((payload &amp;&amp; !payload_s) || (!payload &amp;&amp; payload_s))                      \
+<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">if</span> (payload_s &amp;&amp; !payload)                                                   \
 {                                                                            \
     snprintf(l-&gt;err_buf, <a class="code" href="libnet-macros_8h.html#2d720375e2ef5a85a62d6069283a5223">LIBNET_ERRBUF_SIZE</a>,                                 \
             <span class="stringliteral">"%s(): payload inconsistency\n"</span>, __func__);                      \
     <span class="keywordflow">goto</span> bad;                                                                \
 }                                                                            \
-<span class="keywordflow">if</span> (payload &amp;&amp; payload_s)                                                    \
+<span class="keywordflow">if</span> (payload_s)                                                               \
 {                                                                            \
     n = libnet_pblock_append(l, p, payload, payload_s);                      \
-    <span class="keywordflow">if</span> (n == (u_int32_t) - 1)                                                \
+    <span class="keywordflow">if</span> (n == (uint32_t) - 1)                                                 \
     {                                                                        \
         <span class="keywordflow">goto</span> bad;                                                            \
     }                                                                        \
@@ -306,7 +306,7 @@ Used several places, to specify "on" or "one"
 <div class="memdoc">
 
 <p>
-Used for <a class="el" href="libnet-functions_8h.html#453d816dc8adffaefc040a1bf5bd9b5f">libnet_get_prand()</a> to specify function disposition 
+Used for <a class="el" href="libnet-functions_8h.html#b74bd339ef6343077dc79bab2063aee3">libnet_get_prand()</a> to specify function disposition 
 </div>
 </div><p>
 <a class="anchor" name="6733960f6981f1930b2d1a489df89cc7"></a><!-- doxytag: member="libnet-macros.h::LIBNET_RESOLVE" ref="6733960f6981f1930b2d1a489df89cc7" args="" -->
@@ -324,7 +324,7 @@ Used for <a class="el" href="libnet-functions_8h.html#453d816dc8adffaefc040a1bf5
 Used for libnet's name resolution functions, specifies that a DNS lookup can be performed if needed to resolve the IP address to a canonical form. 
 </div>
 </div><p>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Jun 9 16:16:39 2009 for libnet by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Nov 8 16:48:17 2010 for libnet by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.3 </small></address>
 </body>

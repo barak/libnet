@@ -50,22 +50,8 @@ host_triplet = @host@
 target_triplet = @target@
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/Makefile.am.common
-noinst_PROGRAMS = arp$(EXEEXT) cdp$(EXEEXT) dhcp_discover$(EXEEXT) \
-	get_addr$(EXEEXT) icmp_timestamp$(EXEEXT) \
-	icmp_unreach$(EXEEXT) ieee$(EXEEXT) isl$(EXEEXT) ntp$(EXEEXT) \
-	ospf_hello$(EXEEXT) ospf_lsa$(EXEEXT) ping_of_death$(EXEEXT) \
-	stp$(EXEEXT) synflood$(EXEEXT) tcp1$(EXEEXT) tcp2$(EXEEXT) \
-	udp1$(EXEEXT) udp2$(EXEEXT) synflood6$(EXEEXT) \
-	icmp6_echoreq$(EXEEXT) icmp_echo_cq$(EXEEXT) smurf$(EXEEXT) \
-	dot1x$(EXEEXT) dns$(EXEEXT) rpc_tcp$(EXEEXT) rpc_udp$(EXEEXT) \
-	mpls$(EXEEXT) icmp_timeexceed$(EXEEXT) fddi_tcp1$(EXEEXT) \
-	fddi_tcp2$(EXEEXT) tring_tcp1$(EXEEXT) tring_tcp2$(EXEEXT) \
-	icmp_redirect$(EXEEXT) bgp4_hdr$(EXEEXT) bgp4_open$(EXEEXT) \
-	bgp4_update$(EXEEXT) bgp4_notification$(EXEEXT) gre$(EXEEXT) \
-	synflood6_frag$(EXEEXT) tftp$(EXEEXT) ip_link$(EXEEXT) \
-	ip_raw$(EXEEXT) sebek$(EXEEXT) hsrp$(EXEEXT) \
-	test_ipv4$(EXEEXT) test_ipv6_icmpv4$(EXEEXT) \
-	test_ipv4_options$(EXEEXT)
+@INSTALL_SAMPLES_TRUE@bin_PROGRAMS = $(am__EXEEXT_1)
+@INSTALL_SAMPLES_FALSE@noinst_PROGRAMS = $(am__EXEEXT_1)
 subdir = sample
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
@@ -75,195 +61,218 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/include/config.h
 CONFIG_CLEAN_FILES =
-PROGRAMS = $(noinst_PROGRAMS)
+am__EXEEXT_1 = arp$(EXEEXT) cdp$(EXEEXT) dhcp_discover$(EXEEXT) \
+	get_addr$(EXEEXT) icmp_timestamp$(EXEEXT) \
+	icmp_unreach$(EXEEXT) ieee$(EXEEXT) isl$(EXEEXT) ntp$(EXEEXT) \
+	ospf_hello$(EXEEXT) ospf_lsa$(EXEEXT) ping_of_death$(EXEEXT) \
+	stp$(EXEEXT) synflood$(EXEEXT) tcp1$(EXEEXT) tcp2$(EXEEXT) \
+	udp1$(EXEEXT) udp2$(EXEEXT) synflood6$(EXEEXT) \
+	icmp6_echoreq$(EXEEXT) icmp6_unreach$(EXEEXT) \
+	icmp_echo_cq$(EXEEXT) smurf$(EXEEXT) dot1x$(EXEEXT) \
+	dns$(EXEEXT) rpc_tcp$(EXEEXT) rpc_udp$(EXEEXT) mpls$(EXEEXT) \
+	icmp_timeexceed$(EXEEXT) fddi_tcp1$(EXEEXT) fddi_tcp2$(EXEEXT) \
+	tring_tcp1$(EXEEXT) tring_tcp2$(EXEEXT) icmp_redirect$(EXEEXT) \
+	bgp4_hdr$(EXEEXT) bgp4_open$(EXEEXT) bgp4_update$(EXEEXT) \
+	bgp4_notification$(EXEEXT) gre$(EXEEXT) \
+	synflood6_frag$(EXEEXT) tftp$(EXEEXT) ip_link$(EXEEXT) \
+	ip_raw$(EXEEXT) sebek$(EXEEXT) hsrp$(EXEEXT) \
+	test_ipv4$(EXEEXT) test_ipv6_icmpv4$(EXEEXT) \
+	test_ipv4_options$(EXEEXT)
+am__installdirs = "$(DESTDIR)$(bindir)"
+binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
+PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 am_arp_OBJECTS = arp.$(OBJEXT)
 arp_OBJECTS = $(am_arp_OBJECTS)
 arp_LDADD = $(LDADD)
-arp_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+arp_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_bgp4_hdr_OBJECTS = bgp4_hdr.$(OBJEXT)
 bgp4_hdr_OBJECTS = $(am_bgp4_hdr_OBJECTS)
 bgp4_hdr_LDADD = $(LDADD)
-bgp4_hdr_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+bgp4_hdr_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_bgp4_notification_OBJECTS = bgp4_notification.$(OBJEXT)
 bgp4_notification_OBJECTS = $(am_bgp4_notification_OBJECTS)
 bgp4_notification_LDADD = $(LDADD)
-bgp4_notification_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+bgp4_notification_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_bgp4_open_OBJECTS = bgp4_open.$(OBJEXT)
 bgp4_open_OBJECTS = $(am_bgp4_open_OBJECTS)
 bgp4_open_LDADD = $(LDADD)
-bgp4_open_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+bgp4_open_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_bgp4_update_OBJECTS = bgp4_update.$(OBJEXT)
 bgp4_update_OBJECTS = $(am_bgp4_update_OBJECTS)
 bgp4_update_LDADD = $(LDADD)
-bgp4_update_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+bgp4_update_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_cdp_OBJECTS = cdp.$(OBJEXT)
 cdp_OBJECTS = $(am_cdp_OBJECTS)
 cdp_LDADD = $(LDADD)
-cdp_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+cdp_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_dhcp_discover_OBJECTS = dhcp_discover.$(OBJEXT)
 dhcp_discover_OBJECTS = $(am_dhcp_discover_OBJECTS)
 dhcp_discover_LDADD = $(LDADD)
-dhcp_discover_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+dhcp_discover_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_dns_OBJECTS = dns.$(OBJEXT)
 dns_OBJECTS = $(am_dns_OBJECTS)
 dns_LDADD = $(LDADD)
-dns_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+dns_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_dot1x_OBJECTS = dot1x.$(OBJEXT)
 dot1x_OBJECTS = $(am_dot1x_OBJECTS)
 dot1x_LDADD = $(LDADD)
-dot1x_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+dot1x_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_fddi_tcp1_OBJECTS = fddi_tcp1.$(OBJEXT)
 fddi_tcp1_OBJECTS = $(am_fddi_tcp1_OBJECTS)
 fddi_tcp1_LDADD = $(LDADD)
-fddi_tcp1_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+fddi_tcp1_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_fddi_tcp2_OBJECTS = fddi_tcp2.$(OBJEXT)
 fddi_tcp2_OBJECTS = $(am_fddi_tcp2_OBJECTS)
 fddi_tcp2_LDADD = $(LDADD)
-fddi_tcp2_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+fddi_tcp2_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_get_addr_OBJECTS = get_addr.$(OBJEXT)
 get_addr_OBJECTS = $(am_get_addr_OBJECTS)
 get_addr_LDADD = $(LDADD)
-get_addr_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+get_addr_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_gre_OBJECTS = gre.$(OBJEXT)
 gre_OBJECTS = $(am_gre_OBJECTS)
 gre_LDADD = $(LDADD)
-gre_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+gre_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_hsrp_OBJECTS = hsrp.$(OBJEXT)
 hsrp_OBJECTS = $(am_hsrp_OBJECTS)
 hsrp_LDADD = $(LDADD)
-hsrp_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+hsrp_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_icmp6_echoreq_OBJECTS = icmp6_echoreq.$(OBJEXT)
 icmp6_echoreq_OBJECTS = $(am_icmp6_echoreq_OBJECTS)
 icmp6_echoreq_LDADD = $(LDADD)
-icmp6_echoreq_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+icmp6_echoreq_DEPENDENCIES = $(top_builddir)/src/libnet.la
+am_icmp6_unreach_OBJECTS = icmp6_unreach.$(OBJEXT)
+icmp6_unreach_OBJECTS = $(am_icmp6_unreach_OBJECTS)
+icmp6_unreach_LDADD = $(LDADD)
+icmp6_unreach_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_icmp_echo_cq_OBJECTS = icmp_echo_cq.$(OBJEXT)
 icmp_echo_cq_OBJECTS = $(am_icmp_echo_cq_OBJECTS)
 icmp_echo_cq_LDADD = $(LDADD)
-icmp_echo_cq_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+icmp_echo_cq_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_icmp_redirect_OBJECTS = icmp_redirect.$(OBJEXT)
 icmp_redirect_OBJECTS = $(am_icmp_redirect_OBJECTS)
 icmp_redirect_LDADD = $(LDADD)
-icmp_redirect_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+icmp_redirect_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_icmp_timeexceed_OBJECTS = icmp_timeexceed.$(OBJEXT)
 icmp_timeexceed_OBJECTS = $(am_icmp_timeexceed_OBJECTS)
 icmp_timeexceed_LDADD = $(LDADD)
-icmp_timeexceed_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+icmp_timeexceed_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_icmp_timestamp_OBJECTS = icmp_timestamp.$(OBJEXT)
 icmp_timestamp_OBJECTS = $(am_icmp_timestamp_OBJECTS)
 icmp_timestamp_LDADD = $(LDADD)
-icmp_timestamp_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+icmp_timestamp_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_icmp_unreach_OBJECTS = icmp_unreach.$(OBJEXT)
 icmp_unreach_OBJECTS = $(am_icmp_unreach_OBJECTS)
 icmp_unreach_LDADD = $(LDADD)
-icmp_unreach_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+icmp_unreach_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_ieee_OBJECTS = ieee.$(OBJEXT)
 ieee_OBJECTS = $(am_ieee_OBJECTS)
 ieee_LDADD = $(LDADD)
-ieee_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+ieee_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_ip_link_OBJECTS = ip_link.$(OBJEXT)
 ip_link_OBJECTS = $(am_ip_link_OBJECTS)
 ip_link_LDADD = $(LDADD)
-ip_link_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+ip_link_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_ip_raw_OBJECTS = ip_raw.$(OBJEXT)
 ip_raw_OBJECTS = $(am_ip_raw_OBJECTS)
 ip_raw_LDADD = $(LDADD)
-ip_raw_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+ip_raw_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_isl_OBJECTS = isl.$(OBJEXT)
 isl_OBJECTS = $(am_isl_OBJECTS)
 isl_LDADD = $(LDADD)
-isl_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+isl_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_mpls_OBJECTS = mpls.$(OBJEXT)
 mpls_OBJECTS = $(am_mpls_OBJECTS)
 mpls_LDADD = $(LDADD)
-mpls_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+mpls_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_ntp_OBJECTS = ntp.$(OBJEXT)
 ntp_OBJECTS = $(am_ntp_OBJECTS)
 ntp_LDADD = $(LDADD)
-ntp_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+ntp_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_ospf_hello_OBJECTS = ospf_hello.$(OBJEXT)
 ospf_hello_OBJECTS = $(am_ospf_hello_OBJECTS)
 ospf_hello_LDADD = $(LDADD)
-ospf_hello_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+ospf_hello_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_ospf_lsa_OBJECTS = ospf_lsa.$(OBJEXT)
 ospf_lsa_OBJECTS = $(am_ospf_lsa_OBJECTS)
 ospf_lsa_LDADD = $(LDADD)
-ospf_lsa_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+ospf_lsa_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_ping_of_death_OBJECTS = ping_of_death.$(OBJEXT)
 ping_of_death_OBJECTS = $(am_ping_of_death_OBJECTS)
 ping_of_death_LDADD = $(LDADD)
-ping_of_death_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+ping_of_death_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_rpc_tcp_OBJECTS = rpc_tcp.$(OBJEXT)
 rpc_tcp_OBJECTS = $(am_rpc_tcp_OBJECTS)
 rpc_tcp_LDADD = $(LDADD)
-rpc_tcp_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+rpc_tcp_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_rpc_udp_OBJECTS = rpc_udp.$(OBJEXT)
 rpc_udp_OBJECTS = $(am_rpc_udp_OBJECTS)
 rpc_udp_LDADD = $(LDADD)
-rpc_udp_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+rpc_udp_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_sebek_OBJECTS = sebek.$(OBJEXT)
 sebek_OBJECTS = $(am_sebek_OBJECTS)
 sebek_LDADD = $(LDADD)
-sebek_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+sebek_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_smurf_OBJECTS = smurf.$(OBJEXT)
 smurf_OBJECTS = $(am_smurf_OBJECTS)
 smurf_LDADD = $(LDADD)
-smurf_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+smurf_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_stp_OBJECTS = stp.$(OBJEXT)
 stp_OBJECTS = $(am_stp_OBJECTS)
 stp_LDADD = $(LDADD)
-stp_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+stp_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_synflood_OBJECTS = synflood.$(OBJEXT)
 synflood_OBJECTS = $(am_synflood_OBJECTS)
 synflood_LDADD = $(LDADD)
-synflood_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+synflood_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_synflood6_OBJECTS = synflood6.$(OBJEXT)
 synflood6_OBJECTS = $(am_synflood6_OBJECTS)
 synflood6_LDADD = $(LDADD)
-synflood6_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+synflood6_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_synflood6_frag_OBJECTS = synflood6_frag.$(OBJEXT)
 synflood6_frag_OBJECTS = $(am_synflood6_frag_OBJECTS)
 synflood6_frag_LDADD = $(LDADD)
-synflood6_frag_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+synflood6_frag_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_tcp1_OBJECTS = tcp1.$(OBJEXT)
 tcp1_OBJECTS = $(am_tcp1_OBJECTS)
 tcp1_LDADD = $(LDADD)
-tcp1_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+tcp1_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_tcp2_OBJECTS = tcp2.$(OBJEXT)
 tcp2_OBJECTS = $(am_tcp2_OBJECTS)
 tcp2_LDADD = $(LDADD)
-tcp2_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+tcp2_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_test_ipv4_OBJECTS = test_ipv4.$(OBJEXT)
 test_ipv4_OBJECTS = $(am_test_ipv4_OBJECTS)
 test_ipv4_LDADD = $(LDADD)
-test_ipv4_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+test_ipv4_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_test_ipv4_options_OBJECTS = test_ipv4_options.$(OBJEXT)
 test_ipv4_options_OBJECTS = $(am_test_ipv4_options_OBJECTS)
 test_ipv4_options_LDADD = $(LDADD)
-test_ipv4_options_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+test_ipv4_options_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_test_ipv6_icmpv4_OBJECTS = test_ipv6_icmpv4.$(OBJEXT)
 test_ipv6_icmpv4_OBJECTS = $(am_test_ipv6_icmpv4_OBJECTS)
 test_ipv6_icmpv4_LDADD = $(LDADD)
-test_ipv6_icmpv4_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+test_ipv6_icmpv4_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_tftp_OBJECTS = tftp.$(OBJEXT)
 tftp_OBJECTS = $(am_tftp_OBJECTS)
 tftp_LDADD = $(LDADD)
-tftp_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+tftp_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_tring_tcp1_OBJECTS = tring_tcp1.$(OBJEXT)
 tring_tcp1_OBJECTS = $(am_tring_tcp1_OBJECTS)
 tring_tcp1_LDADD = $(LDADD)
-tring_tcp1_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+tring_tcp1_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_tring_tcp2_OBJECTS = tring_tcp2.$(OBJEXT)
 tring_tcp2_OBJECTS = $(am_tring_tcp2_OBJECTS)
 tring_tcp2_LDADD = $(LDADD)
-tring_tcp2_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+tring_tcp2_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_udp1_OBJECTS = udp1.$(OBJEXT)
 udp1_OBJECTS = $(am_udp1_OBJECTS)
 udp1_LDADD = $(LDADD)
-udp1_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+udp1_DEPENDENCIES = $(top_builddir)/src/libnet.la
 am_udp2_OBJECTS = udp2.$(OBJEXT)
 udp2_OBJECTS = $(am_udp2_OBJECTS)
 udp2_LDADD = $(LDADD)
-udp2_DEPENDENCIES = $(top_srcdir)/src/libnet.la
+udp2_DEPENDENCIES = $(top_builddir)/src/libnet.la
 DEFAULT_INCLUDES = -I. -I$(top_builddir)/include@am__isrc@
 depcomp =
 am__depfiles_maybe =
@@ -282,11 +291,12 @@ SOURCES = $(arp_SOURCES) $(bgp4_hdr_SOURCES) \
 	$(dns_SOURCES) $(dot1x_SOURCES) $(fddi_tcp1_SOURCES) \
 	$(fddi_tcp2_SOURCES) $(get_addr_SOURCES) $(gre_SOURCES) \
 	$(hsrp_SOURCES) $(icmp6_echoreq_SOURCES) \
-	$(icmp_echo_cq_SOURCES) $(icmp_redirect_SOURCES) \
-	$(icmp_timeexceed_SOURCES) $(icmp_timestamp_SOURCES) \
-	$(icmp_unreach_SOURCES) $(ieee_SOURCES) $(ip_link_SOURCES) \
-	$(ip_raw_SOURCES) $(isl_SOURCES) $(mpls_SOURCES) \
-	$(ntp_SOURCES) $(ospf_hello_SOURCES) $(ospf_lsa_SOURCES) \
+	$(icmp6_unreach_SOURCES) $(icmp_echo_cq_SOURCES) \
+	$(icmp_redirect_SOURCES) $(icmp_timeexceed_SOURCES) \
+	$(icmp_timestamp_SOURCES) $(icmp_unreach_SOURCES) \
+	$(ieee_SOURCES) $(ip_link_SOURCES) $(ip_raw_SOURCES) \
+	$(isl_SOURCES) $(mpls_SOURCES) $(ntp_SOURCES) \
+	$(ospf_hello_SOURCES) $(ospf_lsa_SOURCES) \
 	$(ping_of_death_SOURCES) $(rpc_tcp_SOURCES) $(rpc_udp_SOURCES) \
 	$(sebek_SOURCES) $(smurf_SOURCES) $(stp_SOURCES) \
 	$(synflood_SOURCES) $(synflood6_SOURCES) \
@@ -301,11 +311,12 @@ DIST_SOURCES = $(arp_SOURCES) $(bgp4_hdr_SOURCES) \
 	$(dns_SOURCES) $(dot1x_SOURCES) $(fddi_tcp1_SOURCES) \
 	$(fddi_tcp2_SOURCES) $(get_addr_SOURCES) $(gre_SOURCES) \
 	$(hsrp_SOURCES) $(icmp6_echoreq_SOURCES) \
-	$(icmp_echo_cq_SOURCES) $(icmp_redirect_SOURCES) \
-	$(icmp_timeexceed_SOURCES) $(icmp_timestamp_SOURCES) \
-	$(icmp_unreach_SOURCES) $(ieee_SOURCES) $(ip_link_SOURCES) \
-	$(ip_raw_SOURCES) $(isl_SOURCES) $(mpls_SOURCES) \
-	$(ntp_SOURCES) $(ospf_hello_SOURCES) $(ospf_lsa_SOURCES) \
+	$(icmp6_unreach_SOURCES) $(icmp_echo_cq_SOURCES) \
+	$(icmp_redirect_SOURCES) $(icmp_timeexceed_SOURCES) \
+	$(icmp_timestamp_SOURCES) $(icmp_unreach_SOURCES) \
+	$(ieee_SOURCES) $(ip_link_SOURCES) $(ip_raw_SOURCES) \
+	$(isl_SOURCES) $(mpls_SOURCES) $(ntp_SOURCES) \
+	$(ospf_hello_SOURCES) $(ospf_lsa_SOURCES) \
 	$(ping_of_death_SOURCES) $(rpc_tcp_SOURCES) $(rpc_udp_SOURCES) \
 	$(sebek_SOURCES) $(smurf_SOURCES) $(stp_SOURCES) \
 	$(synflood_SOURCES) $(synflood6_SOURCES) \
@@ -436,6 +447,20 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign no-dependencies
 DISTCLEANFILES = *~
+ACLOCAL_AMFLAGS = -I m4
+INCLUDES = -I$(top_srcdir)/include
+samples = arp cdp dhcp_discover get_addr icmp_timestamp icmp_unreach \
+                  ieee isl ntp ospf_hello ospf_lsa ping_of_death stp synflood \
+                  tcp1 tcp2 udp1 udp2 synflood6 \
+                  icmp6_echoreq \
+                  icmp6_unreach \
+                  icmp_echo_cq \
+                  smurf dot1x dns rpc_tcp rpc_udp mpls icmp_timeexceed \
+                  fddi_tcp1 fddi_tcp2 tring_tcp1 tring_tcp2 icmp_redirect \
+                  bgp4_hdr bgp4_open bgp4_update bgp4_notification gre \
+                  synflood6_frag tftp ip_link ip_raw sebek hsrp \
+                  test_ipv4 test_ipv6_icmpv4 test_ipv4_options
+
 arp_SOURCES = arp.c
 cdp_SOURCES = cdp.c
 dot1x_SOURCES = dot1x.c
@@ -468,6 +493,7 @@ tftp_SOURCES = tftp.c
 udp1_SOURCES = udp1.c
 udp2_SOURCES = udp2.c
 icmp6_echoreq_SOURCES = icmp6_echoreq.c
+icmp6_unreach_SOURCES = icmp6_unreach.c
 smurf_SOURCES = smurf.c
 synflood6_SOURCES = synflood6.c
 synflood6_frag_SOURCES = synflood6_frag.c
@@ -484,7 +510,7 @@ test_ipv4_SOURCES = test_ipv4.c
 test_ipv4_options_SOURCES = test_ipv4_options.c
 test_ipv6_icmpv4_SOURCES = test_ipv6_icmpv4.c
 EXTRA_DIST = libnet_test.h
-LDADD = $(top_srcdir)/src/libnet.la
+LDADD = $(top_builddir)/src/libnet.la
 all: all-am
 
 .SUFFIXES:
@@ -518,6 +544,34 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  if test -f $$p \
+	     || test -f $$p1 \
+	  ; then \
+	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(bindir)/$$f'"; \
+	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(bindir)/$$f" || exit 1; \
+	  else :; fi; \
+	done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	  echo " rm -f '$(DESTDIR)$(bindir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(bindir)/$$f"; \
+	done
+
+clean-binPROGRAMS:
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  echo " rm -f $$p $$f"; \
+	  rm -f $$p $$f ; \
+	done
 
 clean-noinstPROGRAMS:
 	@list='$(noinst_PROGRAMS)'; for p in $$list; do \
@@ -570,6 +624,9 @@ hsrp$(EXEEXT): $(hsrp_OBJECTS) $(hsrp_DEPENDENCIES)
 icmp6_echoreq$(EXEEXT): $(icmp6_echoreq_OBJECTS) $(icmp6_echoreq_DEPENDENCIES) 
 	@rm -f icmp6_echoreq$(EXEEXT)
 	$(LINK) $(icmp6_echoreq_OBJECTS) $(icmp6_echoreq_LDADD) $(LIBS)
+icmp6_unreach$(EXEEXT): $(icmp6_unreach_OBJECTS) $(icmp6_unreach_DEPENDENCIES) 
+	@rm -f icmp6_unreach$(EXEEXT)
+	$(LINK) $(icmp6_unreach_OBJECTS) $(icmp6_unreach_LDADD) $(LIBS)
 icmp_echo_cq$(EXEEXT): $(icmp_echo_cq_OBJECTS) $(icmp_echo_cq_DEPENDENCIES) 
 	@rm -f icmp_echo_cq$(EXEEXT)
 	$(LINK) $(icmp_echo_cq_OBJECTS) $(icmp_echo_cq_LDADD) $(LIBS)
@@ -766,6 +823,9 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(PROGRAMS)
 installdirs:
+	for dir in "$(DESTDIR)$(bindir)"; do \
+	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+	done
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
@@ -793,8 +853,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-noinstPROGRAMS \
-	mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-libtool \
+	clean-noinstPROGRAMS mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
@@ -815,7 +875,7 @@ install-data-am:
 
 install-dvi: install-dvi-am
 
-install-exec-am:
+install-exec-am: install-binPROGRAMS
 
 install-html: install-html-am
 
@@ -846,22 +906,23 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am:
+uninstall-am: uninstall-binPROGRAMS
 
 .MAKE: install-am install-strip
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libtool clean-noinstPROGRAMS ctags distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags uninstall uninstall-am
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
+	clean-generic clean-libtool clean-noinstPROGRAMS ctags \
+	distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-binPROGRAMS \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-binPROGRAMS
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

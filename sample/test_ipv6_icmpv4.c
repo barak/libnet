@@ -42,10 +42,10 @@ static void print_pblocks(libnet_t* l)
 
     while(p) {
         /* h_len is header length for checksumming? "chksum length"? */
-        printf("  tag %d flags %d type %20s/%#x buf %p b_len %2u h_len %2u ip_offset %2u, copied %2u\n",
+        printf("  tag %d flags %d type %20s/%#x buf %p b_len %2u h_len %2u copied %2u\n",
                 p->ptag, p->flags,
                 libnet_diag_dump_pblock_type(p->type), p->type,
-                p->buf, p->b_len, p->h_len, p->ip_offset, p->copied);
+                p->buf, p->b_len, p->h_len, p->copied);
         p = p->next;
     }
     printf("  link_offset %d aligner %d total_size %u nblocks %d\n",
@@ -86,12 +86,12 @@ main(int argc, char *argv[])
     /* 0x2000: RSO */
     icmp_ptag = libnet_build_icmpv4_echo(
             136,0,0,0x2000,0,
-            (u_int8_t *)payload,sizeof(payload), l, LIBNET_PTAG_INITIALIZER);
+            (uint8_t *)payload,sizeof(payload), l, LIBNET_PTAG_INITIALIZER);
     assert(icmp_ptag);
 
     ipv6_ptag = libnet_build_ipv6(
             0, 0,
-            LIBNET_ICMPV6_H + sizeof(payload), // ICMPV6_H == ICMPV4_H, luckily
+            LIBNET_ICMPV6_H + sizeof(payload), /* ICMPV6_H == ICMPV4_H, luckily */
             IPPROTO_ICMP6,
             255,
             *(struct libnet_in6_addr*)&src_ip,
@@ -103,8 +103,8 @@ main(int argc, char *argv[])
     print_pblocks(l);
 
     {
-       u_int8_t* pkt1 = NULL;
-       u_int32_t pkt1_sz = 0;
+       uint8_t* pkt1 = NULL;
+       uint32_t pkt1_sz = 0;
        r = libnet_pblock_coalesce(l, &pkt1, &pkt1_sz);
        assert(r >= 0);
 

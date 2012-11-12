@@ -8,14 +8,22 @@
 
 include $(top_srcdir)/Makefile.am.common
 
-noinst_PROGRAMS = arp cdp dhcp_discover get_addr icmp_timestamp icmp_unreach \
+samples = arp cdp dhcp_discover get_addr icmp_timestamp icmp_unreach \
                   ieee isl ntp ospf_hello ospf_lsa ping_of_death stp synflood \
-                  tcp1 tcp2 udp1 udp2 synflood6 icmp6_echoreq icmp_echo_cq \
+                  tcp1 tcp2 udp1 udp2 synflood6 \
+                  icmp6_echoreq \
+                  icmp6_unreach \
+                  icmp_echo_cq \
                   smurf dot1x dns rpc_tcp rpc_udp mpls icmp_timeexceed \
                   fddi_tcp1 fddi_tcp2 tring_tcp1 tring_tcp2 icmp_redirect \
                   bgp4_hdr bgp4_open bgp4_update bgp4_notification gre \
                   synflood6_frag tftp ip_link ip_raw sebek hsrp \
                   test_ipv4 test_ipv6_icmpv4 test_ipv4_options
+if INSTALL_SAMPLES
+bin_PROGRAMS = $(samples)
+else
+noinst_PROGRAMS = $(samples)
+endif
 
 arp_SOURCES             = arp.c
 cdp_SOURCES             = cdp.c
@@ -49,6 +57,7 @@ tftp_SOURCES            = tftp.c
 udp1_SOURCES            = udp1.c
 udp2_SOURCES            = udp2.c
 icmp6_echoreq_SOURCES   = icmp6_echoreq.c
+icmp6_unreach_SOURCES   = icmp6_unreach.c
 smurf_SOURCES           = smurf.c
 synflood6_SOURCES       = synflood6.c
 synflood6_frag_SOURCES  = synflood6_frag.c
@@ -67,4 +76,4 @@ test_ipv6_icmpv4_SOURCES = test_ipv6_icmpv4.c
 
 EXTRA_DIST = libnet_test.h
 
-LDADD 			= $(top_srcdir)/src/libnet.la
+LDADD 			= $(top_builddir)/src/libnet.la
