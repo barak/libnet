@@ -1,8 +1,11 @@
-.TH "libnet-macros.h" 3 "8 Nov 2010" "Version 1.1" "libnet" \" -*- nroff -*-
+.TH "libnet-macros.h" 3 "Thu Mar 29 2012" "Version 1.1" "libnet" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-libnet-macros.h \- libnet macros and symbolic constants 
+libnet-macros.h \- 
+.PP
+libnet macros and symbolic constants  
+
 .SH SYNOPSIS
 .br
 .PP
@@ -91,7 +94,7 @@ libnet-macros.h \- libnet macros and symbolic constants
 .RI "#define \fBLIBNET_NTP_DO_LI_VN_MODE\fP(li, vn, md)   ((uint8_t)((((li) << 6) & 0xc0) | (((vn) << 3) & 0x38) | ((md) & 0x7)))"
 .br
 .ti -1c
-.RI "#define \fBLIBNET_ISLOOPBACK\fP(p)   (strcmp((p)->ifr_name, 'lo0') == 0)"
+.RI "#define \fBLIBNET_ISLOOPBACK\fP(p)   (strcmp((p)->ifr_name, 'lo') == 0)"
 .br
 .ti -1c
 .RI "#define \fBLIBNET_ISADVMODE\fP(x)   (x & 0x08)"
@@ -134,12 +137,8 @@ libnet macros and symbolic constants
 
 .SH "Define Documentation"
 .PP 
-.SS "#define for_each_context_in_cq(l)   for (l = libnet_cq_head(); libnet_cq_last(); l = libnet_cq_next())"
-.PP
-Provides an interface to iterate through the context queue of libnet contexts. Before calling this macro, be sure to set the queue using \fBlibnet_cq_head()\fP. 
-.SS "#define IN6ADDR_ERROR_INIT"
-.PP
-\fBValue:\fP
+.SS "#define for_each_context_in_cq(l)   for (l = libnet_cq_head(); libnet_cq_last(); l = libnet_cq_next())"Provides an interface to iterate through the context queue of libnet contexts. Before calling this macro, be sure to set the queue using \fBlibnet_cq_head()\fP. 
+.SS "#define IN6ADDR_ERROR_INIT"\fBValue:\fP
 .PP
 .nf
 { { { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, \
@@ -147,9 +146,7 @@ Provides an interface to iterate through the context queue of libnet contexts. B
                                  0xff, 0xff } } }
 .fi
 IPv6 error code 
-.SS "#define LIBNET_DO_PAYLOAD(l, p)"
-.PP
-\fBValue:\fP
+.SS "#define LIBNET_DO_PAYLOAD(l, p)"\fBValue:\fP
 .PP
 .nf
 if (payload_s && !payload)                                                   \
@@ -167,30 +164,14 @@ if (payload_s)                                                               \
     }                                                                        \
 }                                                                            \
 .fi
-.SS "#define LIBNET_DONT_RESOLVE   0"
-.PP
-Used for libnet's name resolution functions, specifies that no DNS lookups should be performed and the IP address should be kept in numeric form. 
-.SS "#define LIBNET_ERRBUF_SIZE   0x100"
-.PP
-The libnet error buffer is 256 bytes long. 
-.SS "#define LIBNET_MAX_PACKET   0xffff"
-.PP
-The biggest an IP packet can be -- 65,535 bytes. 
-.SS "#define LIBNET_MAXOPTION_SIZE   0x28"
-.PP
-IP and TCP options can be up to 40 bytes long. 
-.SS "#define LIBNET_OFF   1"
-.PP
-Used several places, to specify 'on' or 'one' 
-.SS "#define LIBNET_ON   0"
-.PP
-Used several places, to specify 'on' or 'one' 
-.SS "#define LIBNET_PR2   0"
-.PP
-Used for \fBlibnet_get_prand()\fP to specify function disposition 
-.SS "#define LIBNET_RESOLVE   1"
-.PP
-Used for libnet's name resolution functions, specifies that a DNS lookup can be performed if needed to resolve the IP address to a canonical form. 
+.SS "#define LIBNET_DONT_RESOLVE   0"Used for libnet's name resolution functions, specifies that no DNS lookups should be performed and the IP address should be kept in numeric form. 
+.SS "#define LIBNET_ERRBUF_SIZE   0x100"The libnet error buffer is 256 bytes long. 
+.SS "#define LIBNET_MAX_PACKET   0xffff"The biggest an IP packet can be -- 65,535 bytes. 
+.SS "#define LIBNET_MAXOPTION_SIZE   0x28"IP and TCP options can be up to 40 bytes long. 
+.SS "#define LIBNET_OFF   1"Used several places, to specify 'on' or 'one' 
+.SS "#define LIBNET_ON   0"Used several places, to specify 'on' or 'one' 
+.SS "#define LIBNET_PR2   0"Used for \fBlibnet_get_prand()\fP to specify function disposition 
+.SS "#define LIBNET_RESOLVE   1"Used for libnet's name resolution functions, specifies that a DNS lookup can be performed if needed to resolve the IP address to a canonical form. 
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for libnet from the source code.

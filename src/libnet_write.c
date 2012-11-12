@@ -33,6 +33,7 @@
  */
 
 #include <netinet/in.h>
+#include <sys/types.h>
 #include <netinet/udp.h>
 
 #if (HAVE_CONFIG_H)
@@ -356,7 +357,7 @@ libnet_write_raw_ipv4(libnet_t *l, const uint8_t *packet, uint32_t size)
 #endif /* __WIN32__ */
 
     c = sendto(l->fd, packet, size, 0, (struct sockaddr *)&sin,
-            sizeof(struct sockaddr));
+            sizeof(sin));
 
 #if (LIBNET_BSD_BYTE_SWAP)
     ip_hdr->ip_len = UNFIX(ip_hdr->ip_len);
