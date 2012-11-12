@@ -45,7 +45,7 @@ uint8_t *shost, uint16_t len, const uint8_t *snap, uint16_t vid,
 uint16_t portindex, uint16_t reserved, const uint8_t *payload,
 uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
 {
-    uint32_t n, h;
+    uint32_t n;
     libnet_pblock_t *p;
     struct libnet_isl_hdr isl_hdr;
 
@@ -55,7 +55,6 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     n = LIBNET_ISL_H + payload_s;           /* size of memory block */
-    h = 0;
 
     /*
      *  Find the existing protocol block if a ptag is specified, or create
@@ -68,12 +67,12 @@ uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }
 
     memset(&isl_hdr, 0, sizeof (isl_hdr));
-    memcpy(&isl_hdr.isl_dhost, dhost, 5);
+    memcpy(&isl_hdr.isl_dhost, dhost, sizeof(isl_hdr.isl_dhost));
     isl_hdr.isl_type    = type;
     isl_hdr.isl_user    = user;
-    memcpy(&isl_hdr.isl_shost, shost, 6);
+    memcpy(&isl_hdr.isl_shost, shost, sizeof(isl_hdr.isl_shost));
     isl_hdr.isl_len     = htons(len);
-    memcpy(&isl_hdr.isl_dhost, snap, 6);
+    memcpy(&isl_hdr.isl_snap, snap, sizeof(isl_hdr.isl_snap));
     isl_hdr.isl_vid     = htons(vid);
     isl_hdr.isl_index   = htons(portindex);
     isl_hdr.isl_reserved= htons(reserved);

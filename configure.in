@@ -1,12 +1,10 @@
-dnl $Id: configure.in,v 1.10 2004/11/09 07:02:52 mike Exp $
-dnl
 dnl Libnet autoconfiguration information file
 dnl Copyright (c) 1998 - 2002 Mike D. Schiffman <mike@infonexus.com>
 dnl All rights reserved.
 dnl
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(libnet, 1.1.5)
+AC_INIT(libnet, 1.1.6)
 AC_MSG_RESULT(beginning autoconfiguration process for libnet-${PACKAGE_VERSION} ...)
 AC_CANONICAL_SYSTEM
 AC_CONFIG_SRCDIR([src/libnet_build_ip.c])
@@ -31,6 +29,7 @@ ifdef(
 
 AC_CHECK_HEADERS(sys/sockio.h)
 AC_CHECK_FUNCS([gethostbyname2])
+AC_CHECK_FUNCS([getifaddrs])
 AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
@@ -84,7 +83,7 @@ if test -n "${with_link_layer}"; then
         none) AC_LIBOBJ([libnet_link_none]) ;;
         *) AC_MSG_ERROR([Invalid link type "${with_link_layer}"]) ;;
     esac
-    AC_MSG_RESULT(forced link layer to ${with_link_layer})
+    AC_MSG_RESULT(user selected link layer ${with_link_layer})
 elif test "${cross_compiling}" != "yes" -a -r /dev/bpf0 ; then
     AC_LIBOBJ([libnet_link_bpf])
     AC_MSG_RESULT(found link layer bpf)
@@ -201,6 +200,23 @@ case "$target_os" in
     AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1,
         [Define if the sockaddr structure includes a sa_len member.])
     LIBNET_CONFIG_DEFINES="-DHAVE_SOCKADDR_SA_LEN"
+
+dnl
+dnl Check to see if x86
+dnl
+
+    case "$target" in
+    i?86-*-*darwin*)
+        AC_DEFINE(LIBNET_BSDISH_OS)
+        AC_DEFINE(LIBNET_BSD_BYTE_SWAP)
+        LIBNET_CONFIG_DEFINES="$LIBNET_CONFIG_DEFINES -DLIBNET_BSDISH_OS -DLIBNET_BSD_BYTE_SWAP"
+        ;;
+
+    *)
+        ;;
+
+    esac
+
     ;;
 
 *solaris*)
@@ -251,6 +267,10 @@ dnl
         AC_DEFINE(HAVE_SOLARIS_IPV6, 1,
             [Define if our version of Solaris supports IPv6.])
         ;;
+    5.10|5.11|5.12)
+        AC_DEFINE(HAVE_SOLARIS_IPV6, 1,
+            [Define if our version of Solaris supports IPv6.])
+        ;;
 
     esac
 
@@ -260,7 +280,7 @@ dnl
     ;;
 
 *hpux11*)
-    AC_DEFINE(HAVE_HPUX11, 1, [Define if we're building on HP/UX.])
+    AC_DEFINE(HAVE_HPUX11, 1, [Define if we are building on HP/UX.])
     AC_CHECK_HEADERS(sys/dlpi_ext.h)
     ;;
 

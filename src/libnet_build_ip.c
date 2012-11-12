@@ -448,7 +448,7 @@ const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
     }  
     
     memset(&ip_hdr, 0, sizeof(ip_hdr));
-    ip_hdr.ip_flags[0] = 0x06 << 4;
+    ip_hdr.ip_flags[0] = (0x06 << 4) | ((tc & 0xF0) >> 4);
     ip_hdr.ip_flags[1] = ((tc & 0x0F) << 4) | ((fl & 0xF0000) >> 16);
     ip_hdr.ip_flags[2] = fl & 0x0FF00 >> 8;
     ip_hdr.ip_flags[3] = fl & 0x000FF;
@@ -749,11 +749,15 @@ libnet_ptag_t
 libnet_autobuild_ipv6(uint16_t len, uint8_t nh, struct libnet_in6_addr dst,
             libnet_t *l, libnet_ptag_t ptag)
 {
+    struct libnet_in6_addr src;
 
-    /* NYI */
-     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-             "%s(): not yet implemented\n", __func__);
-    return (-1);
+    src = libnet_get_ipaddr6(l);
+
+    if (libnet_in6_is_error(src))
+    {
+        return (-1);
+    }
+
+    return libnet_build_ipv6(0, 0, len, nh, 64, src, dst, NULL, 0, l, ptag);
 }
 
-/* EOF */
