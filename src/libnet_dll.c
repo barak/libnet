@@ -1,10 +1,9 @@
 /*
- *  $Id: libnet_build_data.c,v 1.7 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
- *  libnet_build_data.c - generic data block builder
+ *  libnet_dll.c - low-level win32 dll routines
  *
- *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
+ *  Copyright (c) 2002 Roberto Larcher <roberto.larcher@libero.it>
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,48 +29,19 @@
  *
  */
 
-#if (HAVE_CONFIG_H)
-#include "../include/config.h"
-#endif
-#if (!(_WIN32) || (__CYGWIN__)) 
-#include "../include/libnet.h"
-#else
 #include "../include/win32/libnet.h"
-#endif
+#include "packet32.h"
 
-/* FIXME this won't work with TCP or IPv4 data, which is probably a bug */
-libnet_ptag_t
-libnet_build_data(const uint8_t *payload, uint32_t payload_s, libnet_t *l,
-libnet_ptag_t ptag)
+BOOL WINAPI DllMain(HINSTANCE hinst, ULONG fdwReason, LPVOID lpReserved)
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
-
-    if (l == NULL)
-    { 
-        return (-1);
-    } 
-
-    n = payload_s;
-    h = 0;          /* no checksum on generic block */
-
-    /*
-     *  Find the existing protocol block if a ptag is specified, or create
-     *  a new one.
-     */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_DATA_H);
-    if (p == NULL)
+    switch (fdwReason)
     {
-        return (-1);
+        case DLL_PROCESS_ATTACH:
+            break;
+        case DLL_PROCESS_DETACH:
+            break;
     }
-
-    /* boilerplate payload sanity check / append macro */
-    LIBNET_DO_PAYLOAD(l, p);
-
-    return (ptag ? ptag : libnet_pblock_update(l, p, h, LIBNET_PBLOCK_DATA_H));
-bad:
-    libnet_pblock_delete(l, p);
-    return (-1);
+    return (TRUE);
 }
 
 /* EOF */

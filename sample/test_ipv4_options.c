@@ -48,10 +48,10 @@ static void print_pblocks(libnet_t* l)
     libnet_pblock_t* p = l->protocol_blocks;
 
     while(p) {
-        printf("  tag %2d flags %d type %20s/%#x buf %p b_len %2u h_len %2u ip_offset %2u, copied %2u\n",
+        printf("  tag %2d flags %d type %20s/%#x buf %p b_len %2u h_len %2u copied %2u\n",
                 p->ptag, p->flags,
                 libnet_diag_dump_pblock_type(p->type), p->type,
-                p->buf, p->b_len, p->h_len, p->ip_offset, p->copied);
+                p->buf, p->b_len, p->h_len, p->copied);
         p = p->next;
     }
     printf("  link_offset %d aligner %d total_size %u nblocks %d\n",
@@ -69,7 +69,7 @@ static void ptag_error(libnet_t* l, int ptag)
 
 static int build_ipo(libnet_t* l, libnet_ptag_t ptag, int payload_s)
 {
-    u_int8_t* payload = malloc(payload_s);
+    uint8_t* payload = malloc(payload_s);
     assert(payload);
     memset(payload, '\x88', payload_s);
 
@@ -86,7 +86,7 @@ static int build_ipv4(libnet_t* l, libnet_ptag_t ptag, int payload_s, int ip_len
 {
     u_long src_ip = 0xf101f1f1;
     u_long dst_ip = 0xf102f1f1;
-    u_int8_t* payload = malloc(payload_s);
+    uint8_t* payload = malloc(payload_s);
     assert(payload);
     memset(payload, '\x99', payload_s);
 
@@ -118,8 +118,8 @@ static int build_ipv4(libnet_t* l, libnet_ptag_t ptag, int payload_s, int ip_len
 
 static int build_ethernet(libnet_t* l, libnet_ptag_t ptag)
 {
-    u_int8_t enet_src[6] = {0x11, 0x11, 0x11, 0x11, 0x11, 0x11};
-    u_int8_t enet_dst[6] = {0x22, 0x22, 0x22, 0x22, 0x22, 0x22};
+    uint8_t enet_src[6] = {0x11, 0x11, 0x11, 0x11, 0x11, 0x11};
+    uint8_t enet_dst[6] = {0x22, 0x22, 0x22, 0x22, 0x22, 0x22};
 
     ptag = libnet_build_ethernet(
         enet_dst,                                   /* ethernet destination */
@@ -138,8 +138,8 @@ static int build_ethernet(libnet_t* l, libnet_ptag_t ptag)
 static
 void assert_lengths(libnet_t* l, int ip_len, int ip_ihl, int payload_s)
 {
-    u_int8_t* pkt1 = NULL;
-    u_int32_t pkt1_sz = 0;
+    uint8_t* pkt1 = NULL;
+    uint32_t pkt1_sz = 0;
     struct libnet_ipv4_hdr* h1;
     uint8_t* payload = NULL;
 
@@ -152,15 +152,15 @@ void assert_lengths(libnet_t* l, int ip_len, int ip_ihl, int payload_s)
     libnet_diag_dump_hex(pkt1, 14, 1, stdout);
     libnet_diag_dump_hex(pkt1+14, pkt1_sz-14, 1, stdout);
 
-    // check ip IHL value, total ip pkt length, and options value
+    /* check ip IHL value, total ip pkt length, and options value */
     h1 = (struct libnet_ipv4_hdr*) (pkt1+14);
     assert_eq(h1->ip_hl, ip_ihl); 
     assert_eq(ntohs(h1->ip_len), ip_len);
 
-    payload = ((u_int8_t*) h1) + ip_ihl * 4;
+    payload = ((uint8_t*) h1) + ip_ihl * 4;
     if(payload_s > 0) {
-        assert(payload[0] == (u_int8_t)'\x99');
-        assert(payload[payload_s-1] == (u_int8_t)'\x99');
+        assert(payload[0] == (uint8_t)'\x99');
+        assert(payload[payload_s-1] == (uint8_t)'\x99');
     }
 }
 

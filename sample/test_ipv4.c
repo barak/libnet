@@ -40,10 +40,10 @@ static void print_pblocks(libnet_t* l)
 
     while(p) {
         /* h_len is header length for checksumming? "chksum length"? */
-        printf("  tag %d flags %d type %20s/%#x buf %p b_len %2u h_len %2u ip_offset %2u, copied %2u\n",
+        printf("  tag %d flags %d type %20s/%#x buf %p b_len %2u h_len %2u copied %2u\n",
                 p->ptag, p->flags,
                 libnet_diag_dump_pblock_type(p->type), p->type,
-                p->buf, p->b_len, p->h_len, p->ip_offset, p->copied);
+                p->buf, p->b_len, p->h_len, p->copied);
         p = p->next;
     }
     printf("  link_offset %d aligner %d total_size %u nblocks %d\n",
@@ -55,7 +55,7 @@ static int build_ipv4(libnet_t* l, libnet_ptag_t ip_ptag, int payload_s)
 {
     u_long src_ip = 0xf101f1f1;
     u_long dst_ip = 0xf102f1f1;
-    u_int8_t* payload = malloc(payload_s);
+    uint8_t* payload = malloc(payload_s);
     assert(payload);
     memset(payload, '\x00', payload_s);
 
@@ -87,18 +87,18 @@ main(int argc, char *argv[])
     libnet_t *l;
     int r;
     char *device = "eth0";
-    u_int8_t enet_src[6] = {0x11, 0x11, 0x11, 0x11, 0x11, 0x11};
-    u_int8_t enet_dst[6] = {0x22, 0x22, 0x22, 0x22, 0x22, 0x22};
+    uint8_t enet_src[6] = {0x11, 0x11, 0x11, 0x11, 0x11, 0x11};
+    uint8_t enet_dst[6] = {0x22, 0x22, 0x22, 0x22, 0x22, 0x22};
     char errbuf[LIBNET_ERRBUF_SIZE];
     libnet_ptag_t ip_ptag = 0;
     libnet_ptag_t eth_ptag = 0;
     int pkt1_payload = 10;
-    u_int8_t* pkt1 = NULL;
-    u_int32_t pkt1_sz = 0;
+    uint8_t* pkt1 = NULL;
+    uint32_t pkt1_sz = 0;
     struct libnet_ipv4_hdr* h1;
     int pkt2_payload = 2;
-    u_int8_t* pkt2 = NULL;
-    u_int32_t pkt2_sz = 0;
+    uint8_t* pkt2 = NULL;
+    uint32_t pkt2_sz = 0;
     struct libnet_ipv4_hdr* h2;
 
 

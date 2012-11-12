@@ -1,9 +1,10 @@
 /*
- *  $Id: libnet_build_802.1x.c,v 1.12 2004/04/13 17:32:28 mike Exp $
+ *  $Id: libnet_build_link.c,v 1.10 2004/04/13 17:32:28 mike Exp $
  *
  *  libnet
- *  libnet_build_802.1x.c - 802.1x packet assembler
+ *  libnet_build_link.c - link-layer packet assembler
  *
+ *  Copyright (c) 2003 Roberto Larcher <roberto.larcher@libero.it>
  *  Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
  *  All rights reserved.
  *
@@ -33,56 +34,52 @@
 #if (HAVE_CONFIG_H)
 #include "../include/config.h"
 #endif
-#if (!(_WIN32) || (__CYGWIN__)) 
+
+#if (!(_WIN32) || (__CYGWIN__))
 #include "../include/libnet.h"
 #else
 #include "../include/win32/libnet.h"
 #endif
 
 libnet_ptag_t
-libnet_build_802_1x(uint8_t eap_ver, uint8_t eap_type, uint16_t length,
+libnet_build_link(const uint8_t *dst, const uint8_t *src, const uint8_t *oui, uint16_t type,
 const uint8_t *payload, uint32_t payload_s, libnet_t *l, libnet_ptag_t ptag)
+
 {
-    uint32_t n, h;
-    libnet_pblock_t *p;
-    struct libnet_802_1x_hdr dot1x_hdr;
-
-    if (l == NULL)
-    { 
-        return (-1);
-    } 
-
-    n = LIBNET_802_1X_H + payload_s;
-    h = 0;
- 
-    /*
-     *  Find the existing protocol block if a ptag is specified, or create
-     *  a new one.
-     */
-    p = libnet_pblock_probe(l, ptag, n, LIBNET_PBLOCK_802_1X_H);
-    if (p == NULL)
+    uint8_t org[3] = {0x00, 0x00, 0x00};
+    switch (l->link_type)
     {
-        return (-1);
+        /* add FDDI */
+        case DLT_EN10MB:
+            return libnet_build_ethernet(dst, src, type, payload, payload_s, l,
+                    ptag);
+        case DLT_IEEE802:
+            return libnet_build_token_ring(LIBNET_TOKEN_RING_FRAME,
+                    LIBNET_TOKEN_RING_LLC_FRAME, dst, src, LIBNET_SAP_SNAP,
+                    LIBNET_SAP_SNAP, 0x03, org, type, payload, payload_s,
+                    l, ptag);
     }
+    snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+            "%s(): linktype %d not supported\n", __func__, l->link_type);
+    return -1;
+}
 
-    memset(&dot1x_hdr, 0, sizeof(dot1x_hdr));
-    dot1x_hdr.dot1x_version = eap_ver;
-    dot1x_hdr.dot1x_type = eap_type;
-    dot1x_hdr.dot1x_length = htons(length);
-
-    n = libnet_pblock_append(l, p, (uint8_t *)&dot1x_hdr, LIBNET_802_1X_H);
-    if (n == (uint32_t)-1)
+libnet_ptag_t
+libnet_autobuild_link(const uint8_t *dst, const uint8_t *oui, uint16_t type, libnet_t *l)
+{
+    uint8_t org[3] = {0x00, 0x00, 0x00};
+    switch (l->link_type)
     {
-        goto bad;
+       /* add FDDI */
+        case DLT_EN10MB:
+            return (libnet_autobuild_ethernet(dst, type, l));
+        case DLT_IEEE802:
+            return (libnet_autobuild_token_ring(LIBNET_TOKEN_RING_FRAME,
+                   LIBNET_TOKEN_RING_LLC_FRAME, dst, LIBNET_SAP_SNAP,
+                   LIBNET_SAP_SNAP, 0x03, org, TOKEN_RING_TYPE_IP, l));
     }
-    
-    LIBNET_DO_PAYLOAD(l, p);
-
-    return (ptag ? ptag : libnet_pblock_update(l, p, h,
-            LIBNET_PBLOCK_802_1X_H));
-bad:
-    libnet_pblock_delete(l, p);
+    snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
+            "%s(): linktype %d not supported\n", __func__, l->link_type);
     return (-1);
 }
 
-/* EOF */
