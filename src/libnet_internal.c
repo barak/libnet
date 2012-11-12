@@ -115,9 +115,9 @@ libnet_diag_dump_context(libnet_t *l)
     fprintf(stderr, "link offset:\t%d\n", l->link_offset);
     fprintf(stderr, "aligner:\t%d\n", l->aligner);
     fprintf(stderr, "device:\t\t%s\n", l->device);
-    fprintf(stderr, "packets sent:\t%lld\n", l->stats.packets_sent);
-    fprintf(stderr, "packet errors:\t%lld\n", l->stats.packet_errors);
-    fprintf(stderr, "bytes written:\t%lld\n", l->stats.bytes_written);
+    fprintf(stderr, "packets sent:\t%lld\n", (long long int)l->stats.packets_sent);
+    fprintf(stderr, "packet errors:\t%lld\n", (long long int)l->stats.packet_errors);
+    fprintf(stderr, "bytes written:\t%lld\n", (long long int)l->stats.bytes_written);
     fprintf(stderr, "ptag state:\t%d\n", l->ptag_state);
     fprintf(stderr, "context label:\t%s\n", l->label);
     fprintf(stderr, "last errbuf:\t%s\n", l->err_buf);
@@ -173,7 +173,7 @@ libnet_diag_dump_pblock(libnet_t *l)
 char *
 libnet_diag_dump_pblock_type(u_int8_t type)
 {
-    static int8_t buf[50];
+    static char buf[50];
     switch (type)
     {
         case LIBNET_PBLOCK_ARP_H:

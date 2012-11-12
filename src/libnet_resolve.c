@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_resolve.c,v 1.20 2004/03/04 20:52:26 kkuehl Exp $
+ *  $Id: libnet_resolve.c,v 1.21 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet
  *  libnet_resolve.c - various name resolution type routines
@@ -126,7 +126,7 @@ libnet_name2addr4(libnet_t *l, char *host_name, u_int8_t use_name)
             if (!(host_ent = gethostbyname(host_name)))
             {
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-                        "%s(): %s\n", __func__, strerror(errno));
+                        "%s(): %s\n", __func__, hstrerror(h_errno));
                 /* XXX - this is actually 255.255.255.255 */
                 return (-1);
             }
@@ -364,12 +364,12 @@ libnet_get_ipaddr4(libnet_t *l)
 #endif /* WIN32 */
 
 u_int8_t *
-libnet_hex_aton(int8_t *s, int *len)
+libnet_hex_aton(const char *s, int *len)
 {
     u_int8_t *buf;
     int i;
     int32_t l;
-    int8_t *pp;
+    char *pp;
         
     while (isspace(*s))
     {
@@ -390,7 +390,7 @@ libnet_hex_aton(int8_t *s, int *len)
     /* expect len hex octets separated by ':' */
     for (i = 0; i < *len + 1; i++)
     {
-        l = strtol(s, (char **)&pp, 16);
+        l = strtol(s, &pp, 16);
         if (pp == s || l > 0xff || l < 0)
         {
             *len = 0;

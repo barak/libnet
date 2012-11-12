@@ -1,9 +1,8 @@
-.TH "libnet-macros.h" 3 "10 Mar 2004" "libnet" \" -*- nroff -*-
+.TH "libnet-macros.h" 3 "9 Jun 2009" "Version 1.1.4" "libnet" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-libnet-macros.h \- libnet macros and symbloc constants  
-
+libnet-macros.h \- libnet macros and symbolic constants 
 .SH SYNOPSIS
 .br
 .PP
@@ -77,6 +76,9 @@ libnet-macros.h \- libnet macros and symbloc constants
 .RI "#define \fBUNFIX\fP(n)   (n)"
 .br
 .ti -1c
+.RI "#define \fBLIBNET_DO_PAYLOAD\fP(l, p)"
+.br
+.ti -1c
 .RI "#define \fBLIBNET_CKSUM_CARRY\fP(x)   (x = (x >> 16) + (x & 0xffff), (~(x + (x >> 16)) & 0xffff))"
 .br
 .ti -1c
@@ -127,7 +129,7 @@ libnet-macros.h \- libnet macros and symbloc constants
 .in -1c
 .SH "Detailed Description"
 .PP 
-libnet macros and symbloc constants 
+libnet macros and symbolic constants 
 
 
 .SH "Define Documentation"
@@ -137,12 +139,34 @@ libnet macros and symbloc constants
 Provides an interface to iterate through the context queue of libnet contexts. Before calling this macro, be sure to set the queue using \fBlibnet_cq_head()\fP. 
 .SS "#define IN6ADDR_ERROR_INIT"
 .PP
-\fBValue:\fP.nf
+\fBValue:\fP
+.PP
+.nf
 { { { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, \
                                  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, \
                                  0xff, 0xff } } }
 .fi
 IPv6 error code 
+.SS "#define LIBNET_DO_PAYLOAD(l, p)"
+.PP
+\fBValue:\fP
+.PP
+.nf
+if ((payload && !payload_s) || (!payload && payload_s))                      \
+{                                                                            \
+    snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,                                 \
+            '%s(): payload inconsistency\n', __func__);                      \
+    goto bad;                                                                \
+}                                                                            \
+if (payload && payload_s)                                                    \
+{                                                                            \
+    n = libnet_pblock_append(l, p, payload, payload_s);                      \
+    if (n == (u_int32_t) - 1)                                                \
+    {                                                                        \
+        goto bad;                                                            \
+    }                                                                        \
+}                                                                            \
+.fi
 .SS "#define LIBNET_DONT_RESOLVE   0"
 .PP
 Used for libnet's name resolution functions, specifies that no DNS lookups should be performed and the IP address should be kept in numeric form. 

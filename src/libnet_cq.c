@@ -50,7 +50,8 @@ static libnet_cq_t *l_cq = NULL;
 static libnet_cqd_t l_cqd = {0, CQ_LOCK_UNLOCKED, NULL};
 
 
-static inline int set_cq_lock(u_int x) 
+static int
+set_cq_lock(u_int x) 
 {
     if (check_cq_lock(x))
     {
@@ -61,7 +62,8 @@ static inline int set_cq_lock(u_int x)
     return (1);
 }
 
-static inline int clear_cq_lock(u_int x) 
+static int
+clear_cq_lock(u_int x) 
 {
     if (!check_cq_lock(x))
     {
@@ -325,7 +327,7 @@ libnet_cq_find_by_label(char *label)
     return (p ? p->context : NULL);
 }
 
-int8_t *
+const char *
 libnet_cq_getlabel(libnet_t *l)
 {
     return (l->label);
@@ -393,3 +395,15 @@ libnet_cq_size()
 {
     return (l_cqd.node);
 }
+
+u_int32_t
+libnet_cq_end_loop()
+{
+    if (! clear_cq_lock(CQ_LOCK_WRITE))
+    {
+        return (0);
+    }
+    l_cqd.current = l_cq;
+    return (1);
+}
+

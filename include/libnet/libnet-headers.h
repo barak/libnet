@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet-headers.h,v 1.14 2004/03/11 18:50:20 mike Exp $
+ *  $Id: libnet-headers.h,v 1.15 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet-headers.h - Network routine library headers header file
  *
@@ -31,12 +31,12 @@
 
 #ifndef __LIBNET_HEADERS_H
 #define __LIBNET_HEADERS_H
-/**
+/*
  * @file libnet-headers.h
  * @brief libnet header information
  */
 
-/**
+/*
  * Libnet defines header sizes for every builder function exported.
  */
 #define LIBNET_802_1Q_H         0x12    /**< 802.1Q header:       18 bytes */
@@ -105,8 +105,9 @@
 #define LIBNET_TCP_H            0x14    /**< TCP header:          20 bytes */
 #define LIBNET_UDP_H            0x08    /**< UDP header:           8 bytes */
 #define LIBNET_VRRP_H           0x08    /**< VRRP header:          8 bytes */
+#define LIBNET_HSRP_H           0x14    /**< HSRP header:          8 bytes */
 
-/**
+/*
  * IEEE 802.1Q (Virtual Local Area Network) VLAN header, static header 
  * size: 18 bytes
  */
@@ -122,7 +123,7 @@ struct libnet_802_1q_hdr
     u_int16_t vlan_len;                   /**< length or type (802.3 / Eth 2) */
 };  
 
-/**
+/*
  * IEEE 802.1X EAP (Extensible Authentication Protocol) header, static header
  * size: 4 bytes
  */
@@ -294,16 +295,16 @@ struct libnet_bgp4_notification_hdr
 
 
 /*
- *  CDP header
- *  Cisco Discovery Protocol
- *  Base header size: 8 bytes
- */
-
-/*
  *  For checksum stuff -- IANA says 135-254 is "unassigned" as of 12.2001.
  *  Let's hope this one stays that way for a while!
  */
 #define LIBNET_PROTO_CDP    200
+
+/*
+ *  CDP header
+ *  Cisco Discovery Protocol
+ *  Base header size: 8 bytes
+ */
 struct libnet_cdp_hdr
 {
     u_int8_t cdp_version;     /* version (should always be 0x01) */
@@ -453,13 +454,13 @@ struct libnet_dhcpv4_hdr
 };
 
 
+/* this little guy got left out in the cold */
+#define LIBNET_DNS_H LIBNET_UDP_DNSV4_H
 /*
  *  Base DNSv4 header
  *  Domain Name System
  *  Base header size: 12/14 bytes
  */
-/* this little guy got left out in the cold */
-#define LIBNET_DNS_H LIBNET_UDP_DNSV4_H
 struct libnet_dnsv4_hdr
 {
     u_int16_t h_len;          /* length of the packet - only used with TCP */
@@ -471,6 +472,16 @@ struct libnet_dnsv4_hdr
     u_int16_t num_addi_rr;    /* Number of additional resource records */
 };
 
+#define LIBNET_DNS_H LIBNET_UDP_DNSV4_H
+struct libnet_dnsv4udp_hdr
+{
+    u_int16_t id;             /* DNS packet ID */
+    u_int16_t flags;          /* DNS flags */
+    u_int16_t num_q;          /* Number of questions */
+    u_int16_t num_answ_rr;    /* Number of answer resource records */
+    u_int16_t num_auth_rr;    /* Number of authority resource records */
+    u_int16_t num_addi_rr;    /* Number of additional resource records */
+};
 
 /*
  *  Ethernet II header
@@ -716,6 +727,9 @@ struct libnet_ipv4_hdr
 #define IPOPT_SSRR      137 /* strict source route */
 #endif
 
+/*
+ * IPv6 address
+ */
 struct libnet_in6_addr
 {
     union
@@ -1076,15 +1090,15 @@ struct libnet_ah_hdr
 
 
 /*
- *  ISL header
- *  Cisco Inter-Switch Link
- *  Static header size: 26 bytes
- */
-/*
  *  For checksum stuff -- IANA says 135-254 is "unassigned" as of 12.2001.
  *  Let's hope this one stays that way for a while!
  */
 #define LIBNET_PROTO_ISL    201
+/*
+ *  ISL header
+ *  Cisco Inter-Switch Link
+ *  Static header size: 26 bytes
+ */
 struct libnet_isl_hdr
 {
     u_int8_t isl_dhost[5];    /* destination address "01:00:0c:00:00" */
@@ -1450,7 +1464,9 @@ struct libnet_rpc_opaque_auth
 {
     u_int32_t rpc_auth_flavor;
     u_int32_t rpc_auth_length;
-//    u_int8_t *rpc_auth_data;
+#if 0
+    u_int8_t *rpc_auth_data;
+#endif
 };
 
 struct libnet_rpc_call
@@ -1655,6 +1671,36 @@ struct libnet_vrrp_hdr
     u_int16_t vrrp_sum;       /* checksum */
     /* additional addresses */
     /* authentication info */
+};
+
+
+/*
+ *  HSRP header
+ *  Static header size: 20 bytes
+ */
+struct libnet_hsrp_hdr
+{
+#define LIBNET_HSRP_VERSION 0x0
+    u_int8_t version;           /* Version of the HSRP messages */
+#define LIBNET_HSRP_TYPE_HELLO 0x0
+#define LIBNET_HSRP_TYPE_COUP 0x1
+#define LIBNET_HSRP_TYPE_RESIGN 0x2
+    u_int8_t opcode;            /* Type of message */
+#define LIBNET_HSRP_STATE_INITIAL 0x0
+#define LIBNET_HSRP_STATE_LEARN   0x1
+#define LIBNET_HSRP_STATE_LISTEN  0x2
+#define LIBNET_HSRP_STATE_SPEAK   0x4
+#define LIBNET_HSRP_STATE_STANDBY 0x8
+#define LIBNET_HSRP_STATE_ACTIVE  0x10
+    u_int8_t state;            /* Current state of the router */
+    u_int8_t hello_time;       /* Period in seconds between hello messages */
+    u_int8_t hold_time;        /* Seconds that the current hello message is valid */
+    u_int8_t priority;         /* Priority for the election proccess */
+    u_int8_t group;            /* Standby group */
+    u_int8_t reserved;         /* Reserved field */
+#define HSRP_AUTHDATA_LENGTH  8 
+    u_int8_t authdata[HSRP_AUTHDATA_LENGTH]; /* Password */
+    u_int32_t virtual_ip;      /* Virtual IP address */
 };
 
 #endif  /* __LIBNET_HEADERS_H */

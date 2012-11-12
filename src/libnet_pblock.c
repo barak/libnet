@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet_pblock.c,v 1.13 2004/03/16 18:40:59 mike Exp $
+ *  $Id: libnet_pblock.c,v 1.14 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet
  *  libnet_pblock.c - Memory protocol block routines.
@@ -38,6 +38,7 @@
 #else
 #include "../include/win32/libnet.h"
 #endif
+#include <assert.h>
 
 libnet_pblock_t *
 libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, u_int32_t n, u_int8_t type)
@@ -73,7 +74,7 @@ libnet_pblock_probe(libnet_t *l, libnet_ptag_t ptag, u_int32_t n, u_int8_t type)
         if (p->type != type)
         {
             snprintf(l->err_buf, LIBNET_ERRBUF_SIZE,
-               "%s(): ptag refers to different type than expected (%d != %d)",
+            "%s(): ptag refers to different type than expected (0x%x != 0x%x)",
                __func__, p->type, type);
             return (NULL); 
         }
@@ -339,7 +340,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
                     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
                     "%s(): packet assembly cannot find a layer 2 header\n",
                     __func__);
-                    return (-1);
+                    goto err;
                 }
                 break;
             case LIBNET_RAW4:
@@ -348,7 +349,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
                     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
                     "%s(): packet assembly cannot find an IPv4 header\n",
                      __func__);
-                    return (-1);
+                    goto err;
                 }
                 break;
             case LIBNET_RAW6:
@@ -357,7 +358,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
                     snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
                     "%s(): packet assembly cannot find an IPv6 header\n",
                      __func__);
-                    return (-1);
+                    goto err;
                 }
                 break;
             default:
@@ -365,7 +366,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
                 snprintf(l->err_buf, LIBNET_ERRBUF_SIZE, 
                 "%s(): suddenly the dungeon collapses -- you die\n",
                  __func__);
-                return (-1);
+                goto err;
             break;
         }
     }
@@ -395,7 +396,7 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
                     if (c == -1)
                     {
                         /* err msg set in libnet_do_checksum() */
-                        return (-1);
+                        goto err;
                     }
                 }
                 q = p;
@@ -419,6 +420,10 @@ libnet_pblock_coalesce(libnet_t *l, u_int8_t **packet, u_int32_t *size)
         *size -= l->aligner;
     }
     return (1);
+
+err:
+    free(*packet);
+    return (-1);
 }
 
 void
@@ -496,15 +501,18 @@ libnet_pblock_p2p(u_int8_t type)
 }
 
 void
-libnet_pblock_record_ip_offset(libnet_t *l, u_int32_t offset)
+libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p)
 {
-    libnet_pblock_t *p = l->pblock_end;
+    libnet_pblock_t *c;
+    u_int32_t ip_offset = 0;
 
-    do
-    {
-        p->ip_offset = offset;
-        p = p->prev;
-    } while (p && p->type != LIBNET_PBLOCK_IPV4_H);
+    assert(p->type == LIBNET_PBLOCK_IPV4_H || p->type == LIBNET_PBLOCK_IPV6_H);
+
+    for(c = p; c; c = c->prev)
+        ip_offset += c->b_len;
+
+    for(c = p; c; c = c->prev)
+        c->ip_offset = ip_offset;
 }
 
 

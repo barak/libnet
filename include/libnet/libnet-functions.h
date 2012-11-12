@@ -1,5 +1,5 @@
 /*
- *  $Id: libnet-functions.h,v 1.42 2004/03/25 18:50:48 mike Exp $
+ *  $Id: libnet-functions.h,v 1.43 2004/11/09 07:05:07 mike Exp $
  *
  *  libnet-functions.h - function prototypes
  *
@@ -103,7 +103,7 @@ libnet_getfd(libnet_t *l);
  * @return the canonical name of the device used for packet injection. Note 
  * it can be NULL without being an error.
  */
-int8_t *
+const char *
 libnet_getdevice(libnet_t *l);
 
 /**
@@ -507,8 +507,8 @@ libnet_autobuild_ethernet(u_int8_t *dst, u_int16_t type, libnet_t *l);
 /**
  * Builds a Fiber Distributed Data Interface (FDDI) header.
  * @param fc class format and priority
- * @oaram dst destination fddi address
- * @oaram src source fddi address
+ * @param dst destination fddi address
+ * @param src source fddi address
  * @param dsap destination service access point
  * @param ssap source service access point
  * @param cf cf
@@ -528,7 +528,7 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 /**
  * Autobuilds a Fiber Distributed Data Interface (FDDI) header.
  * @param fc class format and priority
- * @oaram dst destination fddi address
+ * @param dst destination fddi address
  * @param dsap destination service access point
  * @param ssap source service access point
  * @param cf cf
@@ -591,7 +591,8 @@ u_int8_t *tpa, libnet_t *l);
  * @param win window size
  * @param sum checksum (0 for libnet to autofill)
  * @param urg urgent pointer
- * @parama len total length of the TCP packet (for checksum calculation)
+ * @param len total length of the TCP packet (for checksum calculation)
+ * @param payload
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
@@ -724,6 +725,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param type type of ICMP packet (should be ICMP_REDIRECT)
  * @param code code of ICMP packet (should be one of the four redirect codes)
  * @param sum checksum (0 for libnet to autofill)
+ * @param gateway
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -793,7 +795,9 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds a version 4 RFC 791 Internet Protocol (IP) header.
- * @param len total length of the IP packet including all subsequent data
+ *
+ * @param ip_len total length of the IP packet including all subsequent data (subsequent
+ *   data includes any IP options and IP options padding)
  * @param tos type of service bits
  * @param id IP identification number
  * @param frag fragmentation bits and offset
@@ -809,19 +813,23 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t 
-libnet_build_ipv4(u_int16_t len, u_int8_t tos, u_int16_t id, u_int16_t frag,
+libnet_build_ipv4(u_int16_t ip_len, u_int8_t tos, u_int16_t id, u_int16_t frag,
 u_int8_t ttl, u_int8_t prot, u_int16_t sum, u_int32_t src, u_int32_t dst,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds an version 4 Internet Protocol (IP) options header. The function 
  * expects options to be a valid IP options string of size options_s, no larger
- * than 40 bytes (the maximum size of an options string). The function checks 
- * to make sure that the preceding header is an IPv4 header and that the 
- * options string would not result in a packet larger than 65,535 bytes 
- * (IPMAXPACKET). The function counts up the number of 32-bit words in the 
- * options string and adjusts the IP header length value as necessary.
- * @param options byte string of IP options
+ * than 40 bytes (the maximum size of an options string).
+ *
+ * When building a chain, the options must be built, then the IPv4 header.
+ *
+ * When updating a chain, if the block following the options is an IPv4 header,
+ * it's total length and header length will be updated if the options block
+ * size changes.
+ *
+ * @param options byte string of IP options (it will be padded up to be an integral
+ *   multiple of 32-bit words).
  * @param options_s length of options string
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
@@ -832,7 +840,8 @@ libnet_build_ipv4_options(u_int8_t *options, u_int32_t options_s, libnet_t *l,
 libnet_ptag_t ptag);
 
 /**
- * Autobuilds a version 4 Internet Protocol (IP) header. The function is useful  * to build an IP header quickly when you do not need a granular level of
+ * Autobuilds a version 4 Internet Protocol (IP) header. The function is useful
+ * to build an IP header quickly when you do not need a granular level of
  * control. The function takes the same len, prot, and dst arguments as 
  * libnet_build_ipv4(). The function does not accept a ptag argument, but it
  * does return a ptag. In other words, you can use it to build a new IP header
@@ -892,7 +901,7 @@ libnet_ptag_t ptag);
  * payload interface.
  * @param nh next header
  * @param len length of the header in 8-byte octets not including the first 8 octets
- * @rtype routing header type
+ * @param rtype routing header type
  * @param segments number of routing segments that follow
  * @param payload optional payload of routing information
  * @param payload_s payload length
@@ -941,19 +950,17 @@ libnet_build_ipv6_hbhopts(u_int8_t nh, u_int8_t len, u_int8_t *payload,
 u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
- * This function is not yet implement and is a NONOP.
+ * This function is not yet implement and is a NOOP.
  * @param len length
  * @param nh next header
  * @param dst destination IPv6 address
- * @param payload optional payload or NULL
- * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
 libnet_autobuild_ipv6(u_int16_t len, u_int8_t nh, struct libnet_in6_addr dst,
-libnet_t *l);
+libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds a Cisco Inter-Switch Link (ISL) header.
@@ -964,7 +971,7 @@ libnet_t *l);
  * @param len total length of the encapuslated packet less 18 bytes
  * @param snap SNAP information (0xaaaa03 + vendor code)
  * @param vid 15 bit VLAN ID, 1 bit BPDU or CDP indicator
- * @param index port index
+ * @param portindex port index
  * @param reserved used for FDDI and token ring
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
@@ -973,10 +980,10 @@ libnet_t *l);
  * @return protocol tag value on success, -1 on error
  */
 libnet_ptag_t
-libnet_build_isl(u_int8_t *dhost, u_int8_t type, u_int8_t user, u_int8_t *shost,
-u_int16_t len, u_int8_t *snap, u_int16_t vid, u_int16_t index,
-u_int16_t reserved, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
-libnet_ptag_t ptag);
+libnet_build_isl(u_int8_t *dhost, u_int8_t type, u_int8_t user,
+u_int8_t *shost, u_int16_t len, u_int8_t *snap, u_int16_t vid,
+u_int16_t portindex, u_int16_t reserved, u_int8_t *payload,
+u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
  * Builds an Internet Protocol Security Encapsulating Security Payload header.
@@ -1030,6 +1037,7 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 /**
  * Builds an RFC 1035 version 4 DNS header. Additional DNS payload information
  * should be specified using the payload interface.
+ * @param h_len
  * @param id DNS packet id
  * @param flags control flags
  * @param num_q number of questions
@@ -1235,7 +1243,7 @@ libnet_ptag_t ptag);
  * @param stratum stratum
  * @param poll polling interval
  * @param precision precision
- * @param delay_interval delay interval
+ * @param delay_int delay interval
  * @param delay_frac delay fraction
  * @param dispersion_int dispersion interval
  * @param dispersion_frac dispersion fraction
@@ -1264,6 +1272,12 @@ u_int32_t rec_ts_frac, u_int32_t xmt_ts_int, u_int32_t xmt_ts_frac,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * @param len
+ * @param type
+ * @param rtr_id
+ * @param area_id
+ * @param sum
+ * @param autype
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1276,6 +1290,13 @@ u_int32_t area_id, u_int16_t sum, u_int16_t autype, u_int8_t *payload,
 u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * @param netmask
+ * @param interval
+ * @param opts
+ * @param priority
+ * @param dead_int
+ * @param des_rtr
+ * @param bkup_rtr
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1285,10 +1306,13 @@ u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 libnet_ptag_t
 libnet_build_ospfv2_hello(u_int32_t netmask, u_int16_t interval, u_int8_t opts,
 u_int8_t priority, u_int dead_int, u_int32_t des_rtr, u_int32_t bkup_rtr,
-u_int32_t neighbor, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
-libnet_ptag_t ptag);
+u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param dgram_len
+ * @param opts
+ * @param type
+ * @param seqnum
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1301,6 +1325,9 @@ u_int seqnum, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag);
  
 /**
+ * @param type
+ * @param lsid
+ * @param advrtr
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1312,6 +1339,7 @@ libnet_build_ospfv2_lsr(u_int type, u_int lsid, u_int32_t advrtr,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param num
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1323,6 +1351,14 @@ libnet_build_ospfv2_lsu(u_int num, u_int8_t *payload, u_int32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * @param age
+ * @param opts
+ * @param type
+ * @param lsid
+ * @param advrtr
+ * @param seqnum
+ * @param sum
+ * @param len
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1335,6 +1371,13 @@ u_int lsid, u_int32_t advrtr, u_int seqnum, u_int16_t sum, u_int16_t len,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param flags
+ * @param num
+ * @param id
+ * @param data
+ * @param type
+ * @param tos
+ * @param metric
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1347,6 +1390,8 @@ u_int data, u_int8_t type, u_int8_t tos, u_int16_t metric, u_int8_t *payload,
 u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param nmask
+ * @param rtrid
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1358,6 +1403,9 @@ libnet_build_ospfv2_lsa_net(u_int32_t nmask, u_int rtrid, u_int8_t *payload,
 u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param nmask
+ * @param metric
+ * @param tos
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1369,6 +1417,10 @@ libnet_build_ospfv2_lsa_sum(u_int32_t nmask, u_int metric, u_int tos,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  
 /**
+ * @param nmask
+ * @param metric
+ * @param fwdaddr
+ * @param tag
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1395,6 +1447,20 @@ libnet_build_data(u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag);
 
 /**
+ * @param opcode
+ * @param htype
+ * @param hlen
+ * @param hopcount
+ * @param xid
+ * @param secs
+ * @param flags
+ * @param cip
+ * @param yip
+ * @param sip
+ * @param gip
+ * @param chaddr
+ * @param sname
+ * @param file
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1409,6 +1475,20 @@ u_int8_t *sname, u_int8_t *file, u_int8_t *payload, u_int32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * @param opcode
+ * @param htype
+ * @param hlen
+ * @param hopcount
+ * @param xid
+ * @param secs
+ * @param flags
+ * @param cip
+ * @param yip
+ * @param sip
+ * @param gip
+ * @param chaddr
+ * @param sname
+ * @param file
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1423,13 +1503,10 @@ u_int8_t *sname, u_int8_t *file, u_int8_t *payload, u_int32_t payload_s,
 libnet_t *l, libnet_ptag_t ptag);
 
 /**
- * @param payload optional payload or NULL
- * @param payload_s payload length or 0
- * @param l pointer to a libnet context
- * @param ptag protocol tag to modify an existing header, 0 to build a new one
- * @return protocol tag value on success, -1 on error
+ * @param fv see libnet_build_gre().
+ * @return size, see libnet_build_gre().
  */
-inline u_int32_t
+u_int32_t
 libnet_getgre_length(u_int16_t fv);
 
 /**
@@ -1440,14 +1517,15 @@ libnet_getgre_length(u_int16_t fv);
  * As GRE is very modular, the first GRE header describes the structure of the
  * header, using bits and flag to specify which fields will be present in the
  * header.
- * @param fv the 16 0 to 7: which fields are included in the header (checksum, seq. number, key, ...), bits 8 to 12: flag, bits 13 to 15: version.
- * @param payload optional payload or NULL
+ * @param fv the 16 0 to 7: which fields are included in the header (checksum,
+ *   seq. number, key, ...), bits 8 to 12: flag, bits 13 to 15: version.
  * @param type which protocol is encapsulated (PPP, IP, ...)
  * @param sum checksum (0 for libnet to autofill).
  * @param offset byte offset from the start of the routing field to the first byte of the SRE
  * @param key inserted by the encapsulator to authenticate the source
  * @param seq sequence number used by the receiver to sort the packets
  * @param len size of the GRE packet
+ * @param payload
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
@@ -1467,13 +1545,13 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * header, using bits and flag to specify which fields will be present in the
  * header.
  * @param fv the 16 0 to 7: which fields are included in the header (checksum, seq. number, key, ...), bits 8 to 12: flag, bits 13 to 15: version.
- * @param payload optional payload or NULL
  * @param type which protocol is encapsulated (PPP, IP, ...)
  * @param sum checksum (0 for libnet to autofill).
  * @param offset byte offset from the start of the routing field to the first byte of the SRE
  * @param key inserted by the encapsulator to authenticate the source
  * @param seq sequence number used by the receiver to sort the packets
  * @param len size of the GRE packet
+ * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
@@ -1485,6 +1563,10 @@ u_int16_t offset, u_int32_t key, u_int32_t seq, u_int16_t len,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
+ * @param af
+ * @param offset
+ * @param length
+ * @param routing
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
  * @param l pointer to a libnet context
@@ -1497,8 +1579,6 @@ u_int8_t *routing, u_int8_t *payload, u_int32_t payload_s, libnet_t *l,
 libnet_ptag_t ptag);
 
 /**
- * @param payload optional payload or NULL
- * @param payload_s payload length or 0
  * @param l pointer to a libnet context
  * @param ptag protocol tag to modify an existing header, 0 to build a new one
  * @return protocol tag value on success, -1 on error
@@ -1603,7 +1683,7 @@ u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
  * @param pid PID 
  * @param uid UID 
  * @param fd FD 
- * @param cmd[SEBEK_CMD_LENGTH] 12 first characters of the command 
+ * @param cmd 12 first characters of the command 
  * @param length length in bytes of the PDU's body 
  * @param payload optional payload or NULL
  * @param payload_s payload length or 0
@@ -1615,6 +1695,31 @@ libnet_ptag_t
 libnet_build_sebek(u_int32_t magic, u_int16_t version, u_int16_t type, 
 u_int32_t counter, u_int32_t time_sec, u_int32_t time_usec, u_int32_t pid,
 u_int32_t uid, u_int32_t fd, u_int8_t cmd[SEBEK_CMD_LENGTH], u_int32_t length, 
+u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
+
+/**
+ * Builds a HSRP header. HSRP is a Cisco propietary protocol defined in
+ * RFC 2281
+ * @param version version of the HSRP messages
+ * @param opcode type of message
+ * @param state current state of the router
+ * @param hello_time period in seconds between hello messages
+ * @param hold_time seconds that the current hello message is valid
+ * @param priority priority for the election proccess
+ * @param group standby group
+ * @param reserved reserved field
+ * @param authdata password
+ * @param virtual_ip virtual ip address
+ * @param payload optional payload or NULL
+ * @param payload_s payload length or 0
+ * @param l pointer to a libnet context
+ * @param ptag protocol tag to modify an existing header, 0 to build a new one
+ * @return protocol tag value on success, -1 on error
+ */
+libnet_ptag_t
+libnet_build_hsrp(u_int8_t version, u_int8_t opcode, u_int8_t state, 
+u_int8_t hello_time, u_int8_t hold_time, u_int8_t priority, u_int8_t group,
+u_int8_t reserved, u_int8_t authdata[HSRP_AUTHDATA_LENGTH], u_int32_t virtual_ip,
 u_int8_t *payload, u_int32_t payload_s, libnet_t *l, libnet_ptag_t ptag);
 
 /**
@@ -1705,7 +1810,14 @@ libnet_get_hwaddr(libnet_t *l);
  * @return a byte string or NULL on failure
  */
 u_int8_t *
-libnet_hex_aton(int8_t *s, int *len);
+libnet_hex_aton(const char *s, int *len);
+
+/**
+ * Returns the version of libnet.
+ * @return the libnet version
+ */
+const char *
+libnet_version(void);
 
 /**
  * [Advanced Interface]
@@ -1756,6 +1868,22 @@ u_int32_t *header_s);
  */
 int
 libnet_adv_write_link(libnet_t *l, u_int8_t *packet, u_int32_t packet_s);
+
+/**
+ * [Advanced Interface] 
+ * Writes a packet the network at the raw socket layer. This function is useful
+ * to write a packet that has been constructed by hand by the application
+ * programmer or, more commonly, to write a packet that has been returned by
+ * a call to libnet_adv_cull_packet(). This function is part of the advanced
+ * interface and is only available when libnet is initialized in advanced mode.
+ * If the function fails libnet_geterror() can tell you why.
+ * @param l pointer to a libnet context
+ * @param packet a pointer to the packet to inject
+ * @param packet_s the size of the packet
+ * @return the number of bytes written, or -1 on failure
+ */
+int
+libnet_adv_write_raw_ipv4(libnet_t *l, u_int8_t *packet, u_int32_t packet_s);
 
 /**
  * [Advanced Interface] 
@@ -1819,7 +1947,7 @@ libnet_cq_remove_by_label(char *label);
  * @param l pointer to a libnet context
  * @return pointer to the libnet context's label
  */   
-int8_t *
+const char *
 libnet_cq_getlabel(libnet_t *l);
  
 /**
@@ -1837,7 +1965,7 @@ libnet_cq_find_by_label(char *label);
  * member context.
  */
 void
-libnet_cq_destroy();
+libnet_cq_destroy(void);
 
 /**
  * [Context Queue] 
@@ -1859,7 +1987,7 @@ libnet_cq_destroy();
  * @return the head of the context queue
  */
 libnet_t *
-libnet_cq_head();
+libnet_cq_head(void);
 
 /**
  * [Context Queue] 
@@ -1867,15 +1995,15 @@ libnet_cq_head();
  * @return 1 if at the end of the context queue, 0 otherwise
  */
 int
-libnet_cq_last();
+libnet_cq_last(void);
 
 /**
  * [Context Queue] 
  * Get next context from the context queue.
- * @reutrn the next context from the context queue
+ * @return the next context from the context queue
  */
 libnet_t *
-libnet_cq_next();
+libnet_cq_next(void);
 
 /**
  * [Context Queue] 
@@ -1883,7 +2011,13 @@ libnet_cq_next();
  * @return the number of libnet contexts currently in the queue
  */
 u_int32_t
-libnet_cq_size();
+libnet_cq_size(void);
+
+/**
+ * [Context Queue]
+ */
+u_int32_t
+libnet_cq_end_loop(void);
 
 /**
  * [Diagnostic] 
@@ -1918,7 +2052,9 @@ libnet_diag_dump_pblock_type(u_int8_t type);
  * packet.
  * @param packet the packet to print
  * @param len length of the packet in bytes
- * @param swap 1 to swap byte order, 0 to not
+ * @param swap 1 to swap byte order, 0 to not.
+ *   Counter-intuitively, it is necessary to swap in order to see the byte
+ *   order as it is on the wire (this may be a bug).
  * @param stream a stream pointer to print to
  */
 void
@@ -2074,10 +2210,10 @@ u_int8_t type);
   * Function updates referer used to compute the checksum. All
   * pblock need to know where is their referer (ie IP header).
   * So, this function is called each time a new IP header is inserted.
-  * It updates the ip_pos field (referer) of each subsequent pblock.
+  * It updates the ip_offset field (referer) of each previous pblock.
   */
 void
-libnet_pblock_record_ip_offset(libnet_t *l, u_int32_t offset);
+libnet_pblock_record_ip_offset(libnet_t *l, libnet_pblock_t *p);
 
 /*
  * [Internal] 

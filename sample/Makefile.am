@@ -1,4 +1,4 @@
-# $Id: Makefile.am,v 1.5 2004/03/11 18:50:20 mike Exp $
+# $Id: Makefile.am,v 1.6 2004/11/09 07:05:07 mike Exp $
 #
 # Libnet automake information file
 # Copyright (c) 1998 - 2004 Mike D. Schiffman <mike@infonexus.com>
@@ -14,7 +14,8 @@ noinst_PROGRAMS = arp cdp dhcp_discover get_addr icmp_timestamp icmp_unreach \
                   smurf dot1x dns rpc_tcp rpc_udp mpls icmp_timeexceed \
                   fddi_tcp1 fddi_tcp2 tring_tcp1 tring_tcp2 icmp_redirect \
                   bgp4_hdr bgp4_open bgp4_update bgp4_notification gre \
-                  synflood6_frag tftp ip_link ip_raw sebek
+                  synflood6_frag tftp ip_link ip_raw sebek hsrp \
+                  test_ipv4 test_ipv6_icmpv4 test_ipv4_options
 
 arp_SOURCES             = arp.c
 cdp_SOURCES             = cdp.c
@@ -59,5 +60,11 @@ gre_SOURCES		= gre.c
 ip_raw_SOURCES          = ip_raw.c
 ip_link_SOURCES		= ip_link.c
 sebek_SOURCES           = sebek.c
+hsrp_SOURCES            = hsrp.c
+test_ipv4_SOURCES       = test_ipv4.c
+test_ipv4_options_SOURCES = test_ipv4_options.c
+test_ipv6_icmpv4_SOURCES = test_ipv6_icmpv4.c
 
-LDADD = $(top_srcdir)/src/libnet.a
+EXTRA_DIST = libnet_test.h
+
+LDADD 			= $(top_srcdir)/src/libnet.la
